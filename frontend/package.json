@@ -6,10 +6,12 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "format": "prettier .  --write"
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "axios": "^1.4.0",
     "core-js": "^3.29.0",
     "pinia": "^2.0.0",
     "roboto-fontface": "*",
@@ -25,7 +27,9 @@
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/eslint-config-typescript": "^11.0.0",
     "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.8.8",
     "sass": "^1.60.0",
     "typescript": "^5.0.0",
     "vite": "^4.2.0",
