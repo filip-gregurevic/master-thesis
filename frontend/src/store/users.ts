@@ -1,25 +1,29 @@
-import { defineStore } from 'pinia'
-// Import axios to make HTTP requests
-import axios from "axios"
-export const useUserStore = defineStore("user", {
+import { defineStore } from 'pinia';
+import axios from 'axios';
+
+export const useUsersStore = defineStore('users', {
   state: () => ({
     users: [],
   }),
   getters: {
-    getUsers(state){
-      return state.users
-    }
+    getUsers(state) {
+      return state.users;
+    },
   },
   actions: {
-    async fetchUsers() {
+    async loadUsers() {
       try {
-        const data = await axios.get('https://jsonplaceholder.typicode.com/users')
-        this.users = data.data
+        const data = await axios.get(
+          'https://jsonplaceholder.typicode.com/users',
+        );
+        this.users = data.data;
+      } catch (error) {
+        alert(error);
+        console.log(error);
       }
-      catch (error) {
-        alert(error)
-        console.log(error)
-      }
-    }
+    },
+    async createUser() {},
+    async updateUser() {},
+    async deleteUser() {},
   },
-})
+});

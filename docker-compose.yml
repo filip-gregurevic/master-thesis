@@ -1,1 +1,32 @@
 version: '3.9'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    ports:
+      - "3333:3333"
+  database:
+    image: postgres:13
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "master-thesis"
+    volumes:
+      - database:/var/lib/postgresql/data
+volumes:
+  database:
+    driver: local

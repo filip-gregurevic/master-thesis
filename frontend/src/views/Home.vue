@@ -1,5 +1,14 @@
 <template>
-  <HelloWorld />
+  <v-container>
+    <v-row>
+      <v-col>
+        Search History
+      </v-col>
+      <v-col>
+        Search
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
