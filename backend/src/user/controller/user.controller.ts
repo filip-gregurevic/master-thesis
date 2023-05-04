@@ -18,6 +18,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { JWTAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { Roles } from '../../auth/decorator/roles.decorator';
 import { Role } from '../entity/role.enum';
+import { RolesGuard } from '../../auth/guard/roles.guard';
 
 @Controller('users')
 export class UserController {
@@ -25,7 +26,7 @@ export class UserController {
 
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Get('')
   async getUsers(): Promise<User[]> {

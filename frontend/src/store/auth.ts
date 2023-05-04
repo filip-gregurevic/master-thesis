@@ -1,38 +1,46 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import router from '@/router';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')),
+    access_token: JSON.parse(localStorage.getItem('token')),
   }),
 
   actions: {
     async loadUser() {
-      const res = await axios.get('https://localhost:3000/user');
+      const res = await axios.get<AxiosResponse<any>>(
+        'http://localhost:3333/user',
+      );
 
       this.user = res;
     },
     async register(email, password) {
-      const res = await fetch('https://localhost:3000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      console.log(email, password);
+      const res = await axios.post('http://localhost:3333/users/register', {
+        email,
+        password,
       });
-      const user = await res.json();
-      this.user = user;
+      router.push('/login');
     },
     async login(email, password) {
-      const res = await fetch('https://localhost:3000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const res = await axios.post('http://localhost:3333/auth/login', {
+        email,
+        password,
       });
-      const user = await res.json();
-      this.user = user;
+      this.user = res.data.user;
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      this.access_token = res.data.access_token;
+      localStorage.setItem('token', res.data.access_token);
+      router.push('/');
+    },
+    logout() {
+      this.user = null;
+      localStorage.removeItem('user');
+      this.access_token = null;
+      localStorage.removeItem('token');
+      router.push('/login');
     },
   },
 });

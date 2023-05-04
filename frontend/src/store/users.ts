@@ -13,10 +13,8 @@ export const useUsersStore = defineStore('users', {
   actions: {
     async loadUsers() {
       try {
-        const data = await axios.get(
-          'https://jsonplaceholder.typicode.com/users',
-        );
-        this.users = data.data;
+        const res = await axios.get('http://localhost:3333/users');
+        this.users = res.data;
       } catch (error) {
         alert(error);
         console.log(error);

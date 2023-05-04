@@ -5,16 +5,52 @@
  */
 
 // Components
-import App from './App.vue'
+import App from './App.vue';
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from '@/plugins';
 
-const app = createApp(App)
+// axios
+import axios from 'axios';
+import { useAuthStore } from '@/store/auth';
 
-registerPlugins(app)
+const app = createApp(App);
 
-app.mount('#app')
+registerPlugins(app);
+
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+axios.interceptors.response.use(
+  function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+  },
+  function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    const authStore = useAuthStore();
+    authStore.logout();
+
+    return Promise.reject(error);
+  },
+);
+
+app.mount('#app');

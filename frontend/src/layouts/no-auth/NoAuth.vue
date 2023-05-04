@@ -1,6 +1,8 @@
 <template>
   <v-app>
-    <no-auth-view />
+    <v-main>
+      <router-view />
+    </v-main>
   </v-app>
 </template>
 

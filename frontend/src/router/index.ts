@@ -1,5 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/store/auth';
 
 const routes = [
   {
@@ -9,11 +10,7 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-          import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () => import('@/views/Home.vue'),
       },
       {
         path: 'users',
@@ -39,6 +36,16 @@ const routes = [
     ],
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login.vue'),
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Register.vue'),
+  },
+  {
     path: '/auth',
     component: () => import('@/layouts/no-auth/NoAuth.vue'),
     children: [
@@ -57,10 +64,19 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(''),
   routes,
 });
 
-// TODO: Add auth and role guard
+router.beforeEach(async (to) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const publicPages = ['/login', '/register'];
+  const authRequired = !publicPages.includes(to.path);
+  const auth = useAuthStore();
+
+  if (authRequired && !auth.user) {
+    return '/login';
+  }
+});
 
 export default router;

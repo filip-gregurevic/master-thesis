@@ -21,6 +21,7 @@ import { SearchModule } from './search/search.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
+        autoLoadEntities: true,
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -30,12 +31,6 @@ import { SearchModule } from './search/search.module';
     SearchModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
