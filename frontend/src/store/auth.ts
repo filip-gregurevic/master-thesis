@@ -5,7 +5,7 @@ import router from '@/router';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: JSON.parse(localStorage.getItem('user')),
-    access_token: JSON.parse(localStorage.getItem('token')),
+    access_token: localStorage.getItem('token') as string | null,
   }),
 
   actions: {
@@ -17,8 +17,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = res;
     },
     async register(email, password) {
-      console.log(email, password);
-      const res = await axios.post('http://localhost:3333/users/register', {
+      await axios.post('http://localhost:3333/users/register', {
         email,
         password,
       });
@@ -33,7 +32,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('user', JSON.stringify(res.data.user));
       this.access_token = res.data.access_token;
       localStorage.setItem('token', res.data.access_token);
-      router.push('/');
+      router.push('/search');
     },
     logout() {
       this.user = null;

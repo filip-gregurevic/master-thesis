@@ -20,8 +20,25 @@ export const useUsersStore = defineStore('users', {
         console.log(error);
       }
     },
-    async createUser() {},
-    async updateUser() {},
-    async deleteUser() {},
+    async updateUser(userId: number, user) {
+      try {
+        await axios.patch('http://localhost:3333/users/' + userId, user);
+        this.users = this.users.map((usr) =>
+          usr.id === userId ? { ...usr, ...user } : usr,
+        );
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
+    async deleteUser(userId: number) {
+      try {
+        await axios.delete('http://localhost:3333/users/' + userId);
+        this.users = this.users.filter((user) => user.id !== userId);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
   },
 });
