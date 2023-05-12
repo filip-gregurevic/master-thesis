@@ -33,6 +33,10 @@ const routes = [
           },
         ],
       },
+      {
+        path: '',
+        redirect: 'search',
+      },
     ],
   },
   {
@@ -61,6 +65,8 @@ const routes = [
       },
     ],
   },
+  // default redirect to search page
+  { path: '/:pathMatch(.*)*', redirect: '/search' },
 ];
 
 const router = createRouter({

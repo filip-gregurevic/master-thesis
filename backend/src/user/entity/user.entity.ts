@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.enum';
+import { Search } from '../../search/entity/search.entity';
 
 @Entity()
 export class User {
@@ -26,4 +27,7 @@ export class User {
     default: Role.User,
   })
   role: Role;
+
+  @OneToMany(() => Search, (search) => search.user)
+  searches: Search[];
 }

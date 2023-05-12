@@ -13,6 +13,7 @@
           <v-text-field
             variant="outlined"
             v-model="email"
+            :error="loginError"
             label="E-Mail"
           ></v-text-field>
         </v-col>
@@ -23,10 +24,16 @@
             variant="outlined"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :type="showPassword ? 'text' : 'password'"
+            :error="loginError"
             v-model="password"
             label="Password"
             @click:append="showPassword = !showPassword"
           ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row v-if="loginError" justify="center" align-content="center">
+        <v-col cols="12" md="6" lg="4">
+          <p class="text-body-1 text-red">Email or Password are incorrect.</p>
         </v-col>
       </v-row>
       <v-row justify="center" align-content="center">
@@ -54,10 +61,19 @@ import { useAuthStore } from '@/store/auth';
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
+const loginError = ref(false);
 
 function login() {
   const authStore = useAuthStore();
 
-  authStore.login(email.value, password.value);
+  authStore.login(email.value, password.value)
+    .then((suc) => {
+      console.log(suc);
+    }).catch((error) => {
+      console.log(error);
+      if (error && error.request && (error.request.status === 403 || error.request.status === 404)) {
+        loginError.value = true;
+      }
+    });
 }
 </script>

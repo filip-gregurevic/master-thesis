@@ -23,16 +23,23 @@ export const useAuthStore = defineStore('auth', {
       });
       router.push('/login');
     },
-    async login(email, password) {
-      const res = await axios.post('http://localhost:3333/auth/login', {
-        email,
-        password,
-      });
-      this.user = res.data.user;
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      this.access_token = res.data.access_token;
-      localStorage.setItem('token', res.data.access_token);
-      router.push('/search');
+    login(email, password) {
+      return axios
+        .post('http://localhost:3333/auth/login', {
+          email,
+          password,
+        })
+        .then((res) => {
+          this.user = res.data.user;
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+          this.access_token = res.data.access_token;
+          localStorage.setItem('token', res.data.access_token);
+          router.push('/search');
+          return Promise.resolve();
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
     logout() {
       this.user = null;

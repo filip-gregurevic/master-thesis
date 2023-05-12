@@ -5,9 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './auth/guard/roles.guard';
 import { SearchModule } from './search/search.module';
+import { AttackModule } from './attack/attack.module';
+import { DefendModule } from './defend/defend.module';
 
 @Module({
   imports: [
@@ -29,6 +29,8 @@ import { SearchModule } from './search/search.module';
     AuthModule,
     UserModule,
     SearchModule,
+    AttackModule,
+    DefendModule,
   ],
   controllers: [AppController],
   providers: [AppService],

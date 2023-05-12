@@ -11,7 +11,7 @@
         to="search"
       >Search</router-link>
       <router-link
-        v-if="authUser.role === 'admin'"
+        v-if="authUser && authUser.role === 'admin'"
         to="users"
       >User Management</router-link>
       <v-spacer />

@@ -35,7 +35,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Post('')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
@@ -44,7 +44,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin, Role.User)
   @Get('/:userId')
   async getUserById(
@@ -65,7 +65,7 @@ export class UserController {
     return this.userService.findById(userId);
   }
 
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Patch('/:userId')
   async updateUser(
@@ -77,7 +77,7 @@ export class UserController {
     return this.userService.updateById(userId, updateUserDto);
   }
 
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Delete('/:userId')
   async deleteUser(@Param('userId') userId: number): Promise<any> {
