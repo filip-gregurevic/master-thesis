@@ -1,10 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { SoftwareType } from './softwareType.enum';
 import { AttackTechnique } from '../../technique/entity/technique.entity';
-import { AttackGroup } from '../../group/entity/group.entity';
 
 @Entity()
-export class AttackSoftware {
+export class AttackMitigation {
   @PrimaryGeneratedColumn({
     type: 'bigint',
   })
@@ -19,12 +17,5 @@ export class AttackSoftware {
   @Column()
   description: string;
 
-  @Column({
-    type: 'enum',
-  })
-  type: SoftwareType;
-
   techniques: AttackTechnique[];
-
-  groups: AttackGroup[];
 }

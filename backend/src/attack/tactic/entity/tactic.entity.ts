@@ -1,12 +1,12 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class AttackGroup {
+export class AttackTactic {
   @PrimaryGeneratedColumn({
     type: 'bigint',
   })
   id: number;
 
-  @Column()
-  name: string;
+  @Column({ unique: true })
+  mitreId: string;
 }

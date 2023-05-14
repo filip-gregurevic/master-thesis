@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { AttackTactic } from '../../tactic/entity/tactic.entity';
 
 @Entity()
 export class AttackTechnique {
@@ -6,4 +13,28 @@ export class AttackTechnique {
     type: 'bigint',
   })
   id: number;
+
+  @Column({ unique: true })
+  mitreId: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  description: string;
+
+  @ManyToOne(() => AttackTactic)
+  tactic: AttackTactic;
+
+  @ManyToOne(
+    () => AttackTechnique,
+    (attackTechnique) => attackTechnique.subTechniques,
+  )
+  parentTechnique: AttackTechnique;
+
+  @OneToMany(
+    () => AttackTechnique,
+    (attackTechnique) => attackTechnique.parentTechnique,
+  )
+  subTechniques: AttackTechnique[];
 }
