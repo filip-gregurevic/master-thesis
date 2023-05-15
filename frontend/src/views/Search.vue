@@ -31,8 +31,65 @@
         <v-btn
           block
           color="primary"
+          :disabled="!searchTerm"
           @click="search"
         >Go</v-btn>
+      </v-col>
+    </v-row>
+    <v-row justify="center" align-content="center">
+      <v-col cols="12">
+        <v-list>
+          <v-list-subheader>Results:</v-list-subheader>
+          <v-list-group value="ATT3CK">
+            <v-list-item></v-list-item>
+          </v-list-group>
+          <v-list-group value="D3FEND">
+            <v-list-item></v-list-item>
+          </v-list-group>
+        </v-list>
+      </v-col>
+    </v-row>
+    <v-row justify="center" align-content="center">
+      <v-col cols="12" lg="6">
+        <v-row justify="center" align-content="center">
+          <v-col cols="12">
+            <v-switch label="Include ATT4CK"></v-switch>
+          </v-col>
+        </v-row>
+        <v-row justify="center" align-content="center">
+          <v-col cols="6">
+            <v-switch label="Include Groups"></v-switch>
+          </v-col>
+          <v-col cols="6">
+            <v-switch label="Include Software"></v-switch>
+          </v-col>
+        </v-row>
+        <v-row justify="center" align-content="center">
+          <v-col cols="6">
+            <v-switch label="Include Techniques"></v-switch>
+          </v-col>
+          <v-col cols="6">
+            <v-switch label="Include Mitigations"></v-switch>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="12" lg="6">
+        <v-row justify="center" align-content="center">
+          <v-col cols="12">
+            <v-switch label="Include D3FEND"></v-switch>
+          </v-col>
+        </v-row>
+        <v-row justify="center" align-content="center">
+          <v-col cols="4">
+            <v-switch label="Include Artifacts"></v-switch>
+          </v-col>
+          <v-col cols="4">
+            <v-switch label="Include Tactics"></v-switch>
+          </v-col>
+          <v-col cols="4">
+            <v-switch label="Include Techniques"></v-switch>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -42,16 +99,23 @@
 import { computed, onMounted, ref } from 'vue';
 import { useSearchStore } from '@/store/search';
 
+// load search history when component is loaded
+onMounted(() => {
+  const searchStore = useSearchStore();
+
+  searchStore.loadSearches();
+});
+
 const searches = computed(() => {
   const searchStore = useSearchStore();
 
   return searchStore.searches;
 });
 
-onMounted(() => {
+const results = computed(() => {
   const searchStore = useSearchStore();
 
-  searchStore.loadSearches();
+  return searchStore.results;
 });
 
 const searchTerm = ref('');

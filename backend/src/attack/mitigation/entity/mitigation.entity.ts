@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AttackTechnique } from '../../technique/entity/technique.entity';
+import { JoinTable } from 'typeorm/browser';
 
 @Entity()
 export class AttackMitigation {
@@ -17,5 +18,7 @@ export class AttackMitigation {
   @Column()
   description: string;
 
+  @ManyToMany(() => AttackTechnique)
+  @JoinTable()
   techniques: AttackTechnique[];
 }

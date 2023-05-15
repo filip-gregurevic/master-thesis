@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/auth';
 export const useSearchStore = defineStore('search', {
   state: () => ({
     searches: [],
+    results: [],
   }),
   getters: {
     getSearches(state) {

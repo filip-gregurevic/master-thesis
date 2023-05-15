@@ -5,12 +5,11 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SoftwareType } from './softwareType.enum';
 import { AttackTechnique } from '../../technique/entity/technique.entity';
-import { AttackGroup } from '../../group/entity/group.entity';
+import { AttackSoftware } from '../../software/entity/software.entity';
 
 @Entity()
-export class AttackSoftware {
+export class AttackDataSource {
   @PrimaryGeneratedColumn({
     type: 'bigint',
   })
@@ -25,16 +24,9 @@ export class AttackSoftware {
   @Column()
   description: string;
 
-  @Column({
-    type: 'enum',
-  })
-  type: SoftwareType;
-
-  @ManyToMany(() => AttackTechnique)
-  @JoinTable()
   techniques: AttackTechnique[];
 
-  @ManyToMany(() => AttackGroup)
+  @ManyToMany(() => AttackSoftware)
   @JoinTable()
-  groups: AttackGroup[];
+  software: AttackSoftware[];
 }
