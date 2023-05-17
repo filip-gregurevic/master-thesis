@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Search } from '../entity/search.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../../user/service/user.service';
+import { AttackService } from '../../attack/service/attack.service';
 
 @Injectable()
 export class SearchService {
@@ -12,6 +13,7 @@ export class SearchService {
     @InjectRepository(Search)
     private readonly searchRepository: Repository<Search>,
     private readonly userService: UserService,
+    private readonly attackService: AttackService,
   ) {}
 
   findByUserId(userId: number): Promise<Search[]> {
@@ -31,7 +33,11 @@ export class SearchService {
     search.searchTerm = searchTerm;
     search.user = user;
 
-    return this.searchRepository.save(search);
+    await this.searchRepository.save(search);
+
+    return {
+      attack: await this.attackService.search(searchTerm),
+    };
   }
 
   deleteById(searchId: number) {

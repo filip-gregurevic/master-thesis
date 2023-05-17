@@ -9,4 +9,10 @@ export class AttackTactic {
 
   @Column({ unique: true })
   mitreId: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  description: string;
 }

@@ -36,14 +36,20 @@
         >Go</v-btn>
       </v-col>
     </v-row>
-    <v-row justify="center" align-content="center">
+    <v-row v-if="results" justify="center" align-content="center">
       <v-col cols="12">
         <v-list>
           <v-list-subheader>Results:</v-list-subheader>
-          <v-list-group value="ATT3CK">
-            <v-list-item></v-list-item>
-          </v-list-group>
-          <v-list-group value="D3FEND">
+          <v-list v-if="results.attack">
+            <v-list-subheader>ATT4CK:</v-list-subheader>
+              <v-list v-if="results.attack.mitigations">
+                <v-list-subheader>Mitigations:</v-list-subheader>
+                  <v-list-item v-for="mitigation in results.attack.mitigations" :key="mitigation.id">
+                    {{ mitigation }}
+                  </v-list-item>
+              </v-list>
+          </v-list>
+          <v-list-group v-if="results.defend" value="D3FEND">
             <v-list-item></v-list-item>
           </v-list-group>
         </v-list>
@@ -57,19 +63,25 @@
           </v-col>
         </v-row>
         <v-row justify="center" align-content="center">
-          <v-col cols="6">
+          <v-col cols="4">
             <v-switch label="Include Groups"></v-switch>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-switch label="Include Software"></v-switch>
+          </v-col>
+          <v-col cols="4">
+            <v-switch label="Include Techniques"></v-switch>
           </v-col>
         </v-row>
         <v-row justify="center" align-content="center">
-          <v-col cols="6">
-            <v-switch label="Include Techniques"></v-switch>
-          </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-switch label="Include Mitigations"></v-switch>
+          </v-col>
+          <v-col cols="4">
+            <v-switch label="Include Campaigns"></v-switch>
+          </v-col>
+          <v-col cols="4">
+            <v-switch label="Include DataSources"></v-switch>
           </v-col>
         </v-row>
       </v-col>

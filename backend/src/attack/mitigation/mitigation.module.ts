@@ -10,4 +10,4 @@ import { AttackMitigationService } from './service/mitigation.service';
   providers: [AttackMitigationService],
   exports: [AttackMitigationService],
 })
-export class AttackSoftwareModule {}
+export class MitigationModule {}

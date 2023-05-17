@@ -20,7 +20,7 @@ export const useSearchStore = defineStore('search', {
         const res = await axios.get(
           'http://localhost:3333/users/' + authStore.user.id + '/searches',
         );
-        console.log(res.data);
+        console.log('searches: ', res.data);
         this.searches = res.data;
       } catch (error) {
         alert(error);
@@ -35,7 +35,8 @@ export const useSearchStore = defineStore('search', {
           'http://localhost:3333/users/' + authStore.user.id + '/searches',
           { searchTerm },
         );
-        console.log(res);
+        console.log('search results: ', res.data);
+        this.results = res.data;
         await this.loadSearches();
       } catch (error) {
         alert(error);

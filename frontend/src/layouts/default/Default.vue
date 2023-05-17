@@ -15,7 +15,13 @@
         to="users"
       >User Management</router-link>
       <v-spacer />
-      <v-btn @click="logout">Logout</v-btn>
+      <v-btn v-if="authUser" id="menu-activator">{{ authUser.email }}</v-btn>
+      <v-menu activator="#menu-activator">
+        <v-list>
+          <v-list-item to="/profile">Profile</v-list-item>
+          <v-list-item @click="logout">Logout</v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <default-view />
   </v-app>

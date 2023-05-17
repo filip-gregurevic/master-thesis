@@ -11,4 +11,10 @@ export class DefendArtifactService {
     @InjectRepository(DefendArtifact)
     private readonly defendArtifactRepository: Repository<DefendArtifact>,
   ) {}
+
+  findById(artifactId: number): Promise<DefendArtifact> {
+    this.logger.debug(`Find artifact with id: ${artifactId}`);
+
+    return this.defendArtifactRepository.findOneBy({ id: artifactId });
+  }
 }

@@ -27,6 +27,7 @@ export class AttackSoftware {
 
   @Column({
     type: 'enum',
+    enum: SoftwareType,
   })
   type: SoftwareType;
 
