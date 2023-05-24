@@ -15,6 +15,7 @@
         to="users"
       >User Management</router-link>
       <v-spacer />
+      <v-btn @click="toggleTheme" :icon="theme.global.name.value === 'light' ? 'mdi-weather-sunny': 'mdi-weather-night'"></v-btn>
       <v-btn v-if="authUser" id="menu-activator">{{ authUser.email }}</v-btn>
       <v-menu activator="#menu-activator">
         <v-list>
@@ -29,7 +30,8 @@
 
 <script lang="ts" setup>
   import DefaultView from './View.vue'
-  import { useAuthStore } from "@/store/auth";
+  import { useAuthStore } from '@/store/auth';
+  import { useTheme } from 'vuetify'
   import { computed } from 'vue';
 
   const authUser = computed(() => {
@@ -37,6 +39,17 @@
 
     return authStore.user;
   });
+
+  const theme = computed(() => {
+    const theme = useTheme();
+
+    return theme;
+  });
+
+  function toggleTheme() {
+
+    theme.value.global.name.value = theme.value.global.current.value.dark ? 'light' : 'dark'
+  }
 
   function logout () {
     const authStore = useAuthStore();

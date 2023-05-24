@@ -4,6 +4,7 @@ import { Search } from '../entity/search.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../../user/service/user.service';
 import { AttackService } from '../../attack/service/attack.service';
+import { DefendService } from '../../defend/service/defend.service';
 
 @Injectable()
 export class SearchService {
@@ -14,6 +15,7 @@ export class SearchService {
     private readonly searchRepository: Repository<Search>,
     private readonly userService: UserService,
     private readonly attackService: AttackService,
+    private readonly defendService: DefendService,
   ) {}
 
   findByUserId(userId: number): Promise<Search[]> {
@@ -37,6 +39,7 @@ export class SearchService {
 
     return {
       attack: await this.attackService.search(searchTerm),
+      defend: await this.defendService.search(searchTerm),
     };
   }
 

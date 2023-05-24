@@ -19,10 +19,4 @@
 <script lang="ts" setup>
 import { useAlertStore } from "@/store/alert";
 
-export default {
-  setup() {
-    const alertStore = useAlertStore();
-    return { alertStore };
-  },
-};
 </script>

@@ -18,7 +18,10 @@ export const useSearchStore = defineStore('search', {
 
       try {
         const res = await axios.get(
-          'http://localhost:3333/users/' + authStore.user.id + '/searches',
+          import.meta.env.VITE_BACKEND_URL +
+            '/users/' +
+            authStore.user.id +
+            '/searches',
         );
         console.log('searches: ', res.data);
         this.searches = res.data;
@@ -32,7 +35,10 @@ export const useSearchStore = defineStore('search', {
 
       try {
         const res = await axios.post(
-          'http://localhost:3333/users/' + authStore.user.id + '/searches',
+          import.meta.env.VITE_BACKEND_URL +
+            '/users/' +
+            authStore.user.id +
+            '/searches',
           { searchTerm },
         );
         console.log('search results: ', res.data);
@@ -45,7 +51,9 @@ export const useSearchStore = defineStore('search', {
     },
     async deleteSearchById(searchId: number) {
       try {
-        await axios.delete('http://localhost:3333/searches/' + searchId);
+        await axios.delete(
+          import.meta.env.VITE_BACKEND_URL + '/searches/' + searchId,
+        );
         await this.loadSearches();
       } catch (error) {
         alert(error);

@@ -4,28 +4,21 @@ import router from '@/router';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: JSON.parse(localStorage.getItem('user')),
+    user: JSON.parse(localStorage.getItem('user')!),
     access_token: localStorage.getItem('token') as string | null,
   }),
 
   actions: {
-    async loadUser() {
-      const res = await axios.get<AxiosResponse<any>>(
-        'http://localhost:3333/user',
-      );
-
-      this.user = res;
-    },
-    async register(email, password) {
-      await axios.post('http://localhost:3333/users/register', {
+    async register(email: string, password: string) {
+      await axios.post(import.meta.env.VITE_BACKEND_URL + '/users/register', {
         email,
         password,
       });
       router.push('/login');
     },
-    login(email, password) {
+    login(email: string, password: string) {
       return axios
-        .post('http://localhost:3333/auth/login', {
+        .post(import.meta.env.VITE_BACKEND_URL + '/auth/login', {
           email,
           password,
         })

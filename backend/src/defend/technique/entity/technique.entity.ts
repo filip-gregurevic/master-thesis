@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class DefendTechnique {
@@ -6,4 +6,7 @@ export class DefendTechnique {
     type: 'bigint',
   })
   id: number;
+
+  @Column()
+  name: string;
 }
