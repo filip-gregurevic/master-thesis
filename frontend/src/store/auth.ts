@@ -10,11 +10,18 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async register(email: string, password: string) {
-      await axios.post(import.meta.env.VITE_BACKEND_URL + '/users/register', {
-        email,
-        password,
-      });
-      router.push('/login');
+      return axios
+        .post(import.meta.env.VITE_BACKEND_URL + '/users/register', {
+          email,
+          password,
+        })
+        .then(() => {
+          router.push('/login');
+          return Promise.resolve();
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
     login(email: string, password: string) {
       return axios
@@ -27,8 +34,7 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('user', JSON.stringify(res.data.user));
           this.access_token = res.data.access_token;
           localStorage.setItem('token', res.data.access_token);
-          router.push('/search');
-          return Promise.resolve();
+          return router.push('/search');
         })
         .catch((error) => {
           return Promise.reject(error);
@@ -39,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('user');
       this.access_token = null;
       localStorage.removeItem('token');
-      router.push('/login');
+      return router.push('/login');
     },
   },
 });

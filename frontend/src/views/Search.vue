@@ -2,10 +2,7 @@
   <v-navigation-drawer permanent>
     <v-list>
       <v-list-subheader>Search History</v-list-subheader>
-      <v-list-item
-        v-for="search in searches"
-        :key="search.id"
-      >
+      <v-list-item v-for="search in searches" :key="search.id">
         <v-list-item-title>{{ search }}</v-list-item-title>
         <template v-slot:append>
           <v-btn
@@ -28,12 +25,9 @@
         ></v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn
-          block
-          color="primary"
-          :disabled="!searchTerm"
-          @click="search"
-        >Go</v-btn>
+        <v-btn block color="primary" :disabled="!searchTerm" @click="search"
+          >Go</v-btn
+        >
       </v-col>
     </v-row>
     <v-row v-if="results" justify="center" align-content="center">
@@ -42,66 +36,121 @@
           <v-list-subheader>Results:</v-list-subheader>
           <v-list v-if="results.attack">
             <v-list-subheader>ATT4CK:</v-list-subheader>
-            <v-list v-if="results.attack.campaigns">
+            <v-list
+              v-if="results.attack.campaigns && results.attack.campaigns.length"
+            >
               <v-list-subheader>Campaigns:</v-list-subheader>
-              <v-list-item v-for="campaign in results.attack.campaigns" :key="campaign.id">
+              <v-list-item
+                v-for="campaign in results.attack.campaigns"
+                :key="campaign.id"
+              >
                 {{ campaign }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.attack.dataSources">
+            <v-list
+              v-if="
+                results.attack.dataSources && results.attack.dataSources.length
+              "
+            >
               <v-list-subheader>Data Sources:</v-list-subheader>
-              <v-list-item v-for="dataSource in results.attack.dataSources" :key="dataSource.id">
+              <v-list-item
+                v-for="dataSource in results.attack.dataSources"
+                :key="dataSource.id"
+              >
                 {{ dataSource }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.attack.groups">
+            <v-list
+              v-if="results.attack.groups && results.attack.groups.length"
+            >
               <v-list-subheader>Groups:</v-list-subheader>
-              <v-list-item v-for="group in results.attack.groups" :key="group.id">
+              <v-list-item
+                v-for="group in results.attack.groups"
+                :key="group.id"
+              >
                 {{ group }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.attack.mitigations">
+            <v-list
+              v-if="
+                results.attack.mitigations && results.attack.mitigations.length
+              "
+            >
               <v-list-subheader>Mitigations:</v-list-subheader>
-              <v-list-item v-for="mitigation in results.attack.mitigations" :key="mitigation.id">
+              <v-list-item
+                v-for="mitigation in results.attack.mitigations"
+                :key="mitigation.id"
+              >
                 {{ mitigation }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.attack.software">
+            <v-list
+              v-if="results.attack.software && results.attack.software.length"
+            >
               <v-list-subheader>Software:</v-list-subheader>
               <v-list-item v-for="sw in results.attack.software" :key="sw.id">
                 {{ sw }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.attack.tactics">
+            <v-list
+              v-if="results.attack.tactics && results.attack.tactics.length"
+            >
               <v-list-subheader>Tactics:</v-list-subheader>
-              <v-list-item v-for="tactic in results.attack.tactics" :key="tactic.id">
+              <v-list-item
+                v-for="tactic in results.attack.tactics"
+                :key="tactic.id"
+              >
                 {{ tactic }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.attack.techniques">
+            <v-list
+              v-if="
+                results.attack.techniques && results.attack.techniques.length
+              "
+            >
               <v-list-subheader>Techniques:</v-list-subheader>
-              <v-list-item v-for="technique in results.attack.techniques" :key="technique.id">
+              <v-list-item
+                v-for="technique in results.attack.techniques"
+                :key="technique.id"
+              >
                 {{ technique }}
               </v-list-item>
             </v-list>
           </v-list>
           <v-list v-if="results.defend">
             <v-list-subheader>D3FEND:</v-list-subheader>
-            <v-list v-if="results.defend.artifacts">
+            <v-list
+              v-if="results.defend.artifacts && results.defend.artifacts.length"
+            >
               <v-list-subheader>Artifacts:</v-list-subheader>
-              <v-list-item v-for="artifact in results.defend.artifacts" :key="artifact.id">
+              <v-list-item
+                v-for="artifact in results.defend.artifacts"
+                :key="artifact.id"
+              >
                 {{ artifact }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.defend.tactics">
+            <v-list
+              v-if="results.defend.tactics && results.defend.tactics.length"
+            >
               <v-list-subheader>Tactics:</v-list-subheader>
-              <v-list-item v-for="tactic in results.defend.tactics" :key="tactic.id">
+              <v-list-item
+                v-for="tactic in results.defend.tactics"
+                :key="tactic.id"
+              >
                 {{ tactic }}
               </v-list-item>
             </v-list>
-            <v-list v-if="results.defend.techniques">
+            <v-list
+              v-if="
+                results.defend.techniques && results.defend.techniques.length
+              "
+            >
               <v-list-subheader>Techniques:</v-list-subheader>
-              <v-list-item v-for="technique in results.defend.techniques" :key="technique.id">
+              <v-list-item
+                v-for="technique in results.defend.techniques"
+                :key="technique.id"
+              >
                 {{ technique }}
               </v-list-item>
             </v-list>
@@ -118,24 +167,42 @@
         </v-row>
         <v-row justify="center" align-content="center">
           <v-col cols="4">
-            <v-switch label="Include Groups" v-model="searchAttackGroups"></v-switch>
+            <v-switch
+              label="Include Groups"
+              v-model="searchAttackGroups"
+            ></v-switch>
           </v-col>
           <v-col cols="4">
-            <v-switch label="Include Software" v-model="searchAttackSoftware"></v-switch>
+            <v-switch
+              label="Include Software"
+              v-model="searchAttackSoftware"
+            ></v-switch>
           </v-col>
           <v-col cols="4">
-            <v-switch label="Include Techniques" v-model="searchAttackTechniques"></v-switch>
+            <v-switch
+              label="Include Techniques"
+              v-model="searchAttackTechniques"
+            ></v-switch>
           </v-col>
         </v-row>
         <v-row justify="center" align-content="center">
           <v-col cols="4">
-            <v-switch label="Include Mitigations" v-model="searchAttackMitigations"></v-switch>
+            <v-switch
+              label="Include Mitigations"
+              v-model="searchAttackMitigations"
+            ></v-switch>
           </v-col>
           <v-col cols="4">
-            <v-switch label="Include Campaigns" v-model="searchAttackCampaigns"></v-switch>
+            <v-switch
+              label="Include Campaigns"
+              v-model="searchAttackCampaigns"
+            ></v-switch>
           </v-col>
           <v-col cols="4">
-            <v-switch label="Include DataSources" v-model="searchAttackDataSources"></v-switch>
+            <v-switch
+              label="Include DataSources"
+              v-model="searchAttackDataSources"
+            ></v-switch>
           </v-col>
         </v-row>
       </v-col>
@@ -147,13 +214,22 @@
         </v-row>
         <v-row justify="center" align-content="center">
           <v-col cols="4">
-            <v-switch label="Include Artifacts" v-model="searchDefendArtifacts"></v-switch>
+            <v-switch
+              label="Include Artifacts"
+              v-model="searchDefendArtifacts"
+            ></v-switch>
           </v-col>
           <v-col cols="4">
-            <v-switch label="Include Tactics" v-model="searchDefendTactics"></v-switch>
+            <v-switch
+              label="Include Tactics"
+              v-model="searchDefendTactics"
+            ></v-switch>
           </v-col>
           <v-col cols="4">
-            <v-switch label="Include Techniques" v-model="searchDefendTechniques"></v-switch>
+            <v-switch
+              label="Include Techniques"
+              v-model="searchDefendTechniques"
+            ></v-switch>
           </v-col>
         </v-row>
       </v-col>
@@ -164,6 +240,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 import { useSearchStore } from '@/store/search';
+import { useAlertStore } from '@/store/alert';
 
 // load search history when component is loaded
 onMounted(() => {
@@ -201,14 +278,20 @@ const searchDefendTechniques = ref(true);
 function search() {
   const searchStore = useSearchStore();
 
-  searchStore.search(
-    searchTerm.value,
-  );
+  searchStore.search(searchTerm.value);
 }
 
 function deleteSearch(searchId: number) {
   const searchStore = useSearchStore();
+  const alertStore = useAlertStore();
 
-  searchStore.deleteSearchById(searchId);
+  searchStore
+    .deleteSearchById(searchId)
+    .then(() => {
+      alertStore.initSuccess('Successfully deleted search');
+    })
+    .catch((error) => {
+      alertStore.initError(error.reponse.data.message);
+    });
 }
 </script>

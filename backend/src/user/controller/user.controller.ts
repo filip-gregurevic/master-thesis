@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   ForbiddenException,
@@ -55,7 +56,7 @@ export class UserController {
 
     // check if user has access
     const isOnlyUser = req.user.role === Role.User;
-    if (isOnlyUser && req.user._id.toString() !== userId) {
+    if (isOnlyUser && req.user.id.toString() !== userId) {
       this.logger.error(
         `User with id ${req.user.id} failed accessing user profile`,
       );
@@ -66,22 +67,41 @@ export class UserController {
   }
 
   @UseGuards(JWTAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Patch('/:userId')
   async updateUser(
     @Param('userId') userId: number,
+    @Req() req,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     this.logger.log(`Update user with id: ${userId}`);
+
+    // check if user has access
+    const isOnlyUser = req.user.role === Role.User;
+    if (isOnlyUser && req.user.id.toString() !== userId) {
+      this.logger.error(
+        `User with id ${req.user.id} failed updating user profile`,
+      );
+      throw new ForbiddenException('Users can only update their own profile');
+    }
 
     return this.userService.updateById(userId, updateUserDto);
   }
 
   @UseGuards(JWTAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Delete('/:userId')
-  async deleteUser(@Param('userId') userId: number): Promise<any> {
+  async deleteUser(@Param('userId') userId: number, @Req() req): Promise<any> {
     this.logger.log(`Delete user with id: ${userId}`);
+
+    // check if user has access
+    const isOnlyUser = req.user.role === Role.User;
+    if (isOnlyUser && req.user.id.toString() !== userId) {
+      this.logger.error(
+        `User with id ${req.user.id} failed deleting user profile`,
+      );
+      throw new ForbiddenException('Users can only delete their own profile');
+    }
 
     return this.userService.deleteById(userId);
   }
@@ -89,6 +109,17 @@ export class UserController {
   @Post('/register')
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     this.logger.log(`Register user with email: ${createUserDto.email}`);
+
+    // check if email already in use
+    const user = await this.userService.findByEmailWithPassword(
+      createUserDto.email,
+    );
+    if (user) {
+      this.logger.error(`User with ${createUserDto.email} already exists`);
+      throw new ConflictException(
+        `User with ${createUserDto.email} already exists`,
+      );
+    }
 
     return this.userService.create(createUserDto);
   }

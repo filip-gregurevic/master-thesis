@@ -56,8 +56,13 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  updateById(userId: number, updateUserDto: UpdateUserDto) {
-    this.logger.debug(`Update user with id: ${updateUserDto.id}`);
+  async updateById(userId: number, updateUserDto: UpdateUserDto) {
+    this.logger.debug(`Update user with id: ${userId}`);
+
+    if (updateUserDto.password) {
+      const salt = await bcrypt.genSalt();
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, salt);
+    }
 
     return this.userRepository.update(userId, updateUserDto);
   }

@@ -21,16 +21,6 @@ const routes = [
             name: 'UserList',
             component: () => import('@/views/user/List.vue'),
           },
-          {
-            path: '/new',
-            name: 'UserNew',
-            component: () => import('@/views/user/New.vue'),
-          },
-          {
-            path: '/:userId/edit',
-            name: 'UserNew',
-            component: () => import('@/views/user/Edit.vue'),
-          },
         ],
       },
       {

@@ -13,52 +13,57 @@ export const useSearchStore = defineStore('search', {
     },
   },
   actions: {
-    async loadSearches() {
+    loadSearches() {
       const authStore = useAuthStore();
 
-      try {
-        const res = await axios.get(
+      return axios
+        .get(
           import.meta.env.VITE_BACKEND_URL +
             '/users/' +
             authStore.user.id +
             '/searches',
-        );
-        console.log('searches: ', res.data);
-        this.searches = res.data;
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
+        )
+        .then((res) => {
+          this.searches = res.data;
+
+          return Promise.resolve(res.data);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
     async search(searchTerm: string) {
       const authStore = useAuthStore();
 
-      try {
-        const res = await axios.post(
+      const res = await axios
+        .post(
           import.meta.env.VITE_BACKEND_URL +
             '/users/' +
             authStore.user.id +
             '/searches',
           { searchTerm },
-        );
-        console.log('search results: ', res.data);
-        this.results = res.data;
-        await this.loadSearches();
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
+        )
+        .then(async (res) => {
+          this.results = res.data;
+
+          await this.loadSearches();
+          return Promise.resolve(res.data);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
     async deleteSearchById(searchId: number) {
-      try {
-        await axios.delete(
-          import.meta.env.VITE_BACKEND_URL + '/searches/' + searchId,
-        );
-        await this.loadSearches();
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
+      return axios
+        .delete(import.meta.env.VITE_BACKEND_URL + '/searches/' + searchId)
+        .then(async () => {
+          await this.loadSearches();
+
+          return Promise.resolve();
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
   },
 });
