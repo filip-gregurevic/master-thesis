@@ -24,7 +24,10 @@ export class AttackGroupService {
     );
 
     return this.attackGroupRepository.find({
-      where: [{ name: Like(searchTerm) }, { description: Like(searchTerm) }],
+      where: [
+        { name: Like(`%${searchTerm}%`) },
+        { description: Like(`%${searchTerm}%`) },
+      ],
     });
   }
 }

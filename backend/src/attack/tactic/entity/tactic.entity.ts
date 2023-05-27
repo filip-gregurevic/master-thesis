@@ -15,4 +15,7 @@ export class AttackTactic {
 
   @Column()
   description: string;
+
+  @Column()
+  link: string;
 }

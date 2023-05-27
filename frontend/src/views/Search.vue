@@ -1,12 +1,19 @@
 <template>
   <v-navigation-drawer permanent>
     <v-list>
-      <v-list-subheader>Search History</v-list-subheader>
-      <v-list-item v-for="search in searches" :key="search.id">
-        <v-list-item-title>{{ search }}</v-list-item-title>
+      <v-list-subheader class="text-h5">My Searches</v-list-subheader>
+      <v-list-item
+        v-for="search in searches"
+        :key="search.id"
+        :title="`${search.searchTerm}`"
+        :subtitle="`${search.results} results`"
+        :active="search.id === searchId"
+        active-color="secondary"
+        @click.prevent="loadSearch(search.id)"
+      >
         <template v-slot:append>
           <v-btn
-            color="danger"
+            color="error"
             icon="mdi-close"
             variant="text"
             @click.prevent="deleteSearch(search.id)"
@@ -15,149 +22,316 @@
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
-  <v-container>
-    <v-row justify="center" align-content="center">
-      <v-col cols="10" md="8" lg="6">
-        <v-text-field
-          variant="outlined"
-          placeholder="Search..."
-          v-model="searchTerm"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="2">
-        <v-btn block color="primary" :disabled="!searchTerm" @click="search"
-          >Go</v-btn
-        >
+  <v-container class="mt-8">
+    <v-row justify="center" align-content="center" class="mb-4">
+      <v-col cols="auto"
+        ><v-img
+          min-height="64px"
+          min-width="64px"
+          src="@/assets/logo-cropped.svg"
+        ></v-img
+      ></v-col>
+      <v-col cols="auto"
+        ><h1 class="text-h3">Search MITRE ATT4CK & D3FEND</h1></v-col
+      >
+    </v-row>
+    <v-form @submit.prevent="search">
+      <v-row justify="center" align-content="center">
+        <v-col cols="10" md="8" lg="8">
+          <v-text-field
+            variant="outlined"
+            placeholder="Search..."
+            v-model="searchTerm"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="1">
+          <v-btn type="submit" block color="primary" :disabled="!searchTerm"
+            >Go</v-btn
+          >
+        </v-col>
+      </v-row>
+    </v-form>
+    <v-row
+      v-if="results && results.total === 0"
+      justify="center"
+      align-content="center"
+      dense
+      class="context"
+    >
+      <v-col cols="auto">
+        <h2 class="text-h4">
+          There are no results matching "{{ searchTerm }}"
+        </h2>
       </v-col>
     </v-row>
-    <v-row v-if="results" justify="center" align-content="center">
+    <v-row
+      v-if="results && results.total > 0"
+      justify="center"
+      align-content="center"
+      dense
+      class="context"
+    >
+      <v-col cols="12" class="py-0">
+        <h2 class="text-h4">{{ results.total }} Results</h2>
+      </v-col>
       <v-col cols="12">
-        <v-list>
-          <v-list-subheader>Results:</v-list-subheader>
-          <v-list v-if="results.attack">
-            <v-list-subheader>ATT4CK:</v-list-subheader>
-            <v-list
-              v-if="results.attack.campaigns && results.attack.campaigns.length"
+        <v-list v-if="results.attack && results.attack.total > 0" class="pt-0">
+          <v-list-subheader
+            ><h3 class="text-h5">
+              ATT4CK: {{ results.attack.total }}
+            </h3></v-list-subheader
+          >
+          <v-list
+            v-if="results.attack.campaigns && results.attack.campaigns.length"
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Campaigns: {{ results.attack.campaignsTotal }}
+              </h4></v-list-subheader
             >
-              <v-list-subheader>Campaigns:</v-list-subheader>
-              <v-list-item
-                v-for="campaign in results.attack.campaigns"
-                :key="campaign.id"
-              >
-                {{ campaign }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="
-                results.attack.dataSources && results.attack.dataSources.length
-              "
+            <v-list-item
+              v-for="campaign in results.attack.campaigns"
+              :key="campaign.id"
             >
-              <v-list-subheader>Data Sources:</v-list-subheader>
-              <v-list-item
-                v-for="dataSource in results.attack.dataSources"
-                :key="dataSource.id"
-              >
-                {{ dataSource }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="results.attack.groups && results.attack.groups.length"
-            >
-              <v-list-subheader>Groups:</v-list-subheader>
-              <v-list-item
-                v-for="group in results.attack.groups"
-                :key="group.id"
-              >
-                {{ group }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="
-                results.attack.mitigations && results.attack.mitigations.length
-              "
-            >
-              <v-list-subheader>Mitigations:</v-list-subheader>
-              <v-list-item
-                v-for="mitigation in results.attack.mitigations"
-                :key="mitigation.id"
-              >
-                {{ mitigation }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="results.attack.software && results.attack.software.length"
-            >
-              <v-list-subheader>Software:</v-list-subheader>
-              <v-list-item v-for="sw in results.attack.software" :key="sw.id">
-                {{ sw }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="results.attack.tactics && results.attack.tactics.length"
-            >
-              <v-list-subheader>Tactics:</v-list-subheader>
-              <v-list-item
-                v-for="tactic in results.attack.tactics"
-                :key="tactic.id"
-              >
-                {{ tactic }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="
-                results.attack.techniques && results.attack.techniques.length
-              "
-            >
-              <v-list-subheader>Techniques:</v-list-subheader>
-              <v-list-item
-                v-for="technique in results.attack.techniques"
-                :key="technique.id"
-              >
-                {{ technique }}
-              </v-list-item>
-            </v-list>
+              <template v-slot:title="{ tile }">
+                <div
+                  v-html="highLight(`${campaign.mitreId} - ${campaign.name}`)"
+                ></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div v-html="markdownToHtml(campaign.description)"></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="campaign.link"
+                  target="_blank"
+                ></v-btn>
+              </template>
+            </v-list-item>
           </v-list>
-          <v-list v-if="results.defend">
-            <v-list-subheader>D3FEND:</v-list-subheader>
-            <v-list
-              v-if="results.defend.artifacts && results.defend.artifacts.length"
+          <v-list
+            v-if="
+              results.attack.dataSources && results.attack.dataSources.length
+            "
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">Data Sources:</h4></v-list-subheader
             >
-              <v-list-subheader>Artifacts:</v-list-subheader>
-              <v-list-item
-                v-for="artifact in results.defend.artifacts"
-                :key="artifact.id"
-              >
-                {{ artifact }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="results.defend.tactics && results.defend.tactics.length"
+            <v-list-item
+              v-for="dataSource in results.attack.dataSources"
+              :key="dataSource.id"
             >
-              <v-list-subheader>Tactics:</v-list-subheader>
-              <v-list-item
-                v-for="tactic in results.defend.tactics"
-                :key="tactic.id"
-              >
-                {{ tactic }}
-              </v-list-item>
-            </v-list>
-            <v-list
-              v-if="
-                results.defend.techniques && results.defend.techniques.length
-              "
+              {{ dataSource }}
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="results.attack.groups && results.attack.groups.length"
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Groups: {{ results.attack.groupsTotal }}
+              </h4></v-list-subheader
             >
-              <v-list-subheader>Techniques:</v-list-subheader>
-              <v-list-item
-                v-for="technique in results.defend.techniques"
-                :key="technique.id"
-              >
-                {{ technique }}
-              </v-list-item>
-            </v-list>
+            <v-list-item v-for="group in results.attack.groups" :key="group.id">
+              <template v-slot:title="{ tile }">
+                <div
+                  v-html="highLight(`${group.mitreId} - ${group.name}`)"
+                ></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div v-html="markdownToHtml(group.description)"></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="group.link"
+                  target="_blank"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="
+              results.attack.mitigations && results.attack.mitigations.length
+            "
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Mitigations: {{ results.attack.mitigationsTotal }}
+              </h4></v-list-subheader
+            >
+            <v-list-item
+              v-for="mitigation in results.attack.mitigations"
+              :key="mitigation.id"
+            >
+              <template v-slot:title="{ tile }">
+                <div
+                  v-html="
+                    highLight(`${mitigation.mitreId} - ${mitigation.name}`)
+                  "
+                ></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div v-html="markdownToHtml(mitigation.description)"></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="mitigation.link"
+                  target="_blank"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="results.attack.software && results.attack.software.length"
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Software: {{ results.attack.softwareTotal }}
+              </h4></v-list-subheader
+            >
+            <v-list-item v-for="sw in results.attack.software" :key="sw.id">
+              <template v-slot:title="{ tile }">
+                <div v-html="highLight(`${sw.mitreId} - ${sw.name}`)"></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div v-html="markdownToHtml(sw.description)"></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="sw.link"
+                  target="_blank"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="results.attack.tactics && results.attack.tactics.length"
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Tactics: {{ results.attack.tacticsTotal }}
+              </h4></v-list-subheader
+            >
+            <v-list-item
+              v-for="tactic in results.attack.tactics"
+              :key="tactic.id"
+            >
+              <template v-slot:title="{ tile }">
+                <div
+                  v-html="highLight(`${tactic.mitreId} - ${tactic.name}`)"
+                ></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div v-html="markdownToHtml(tactic.description)"></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="tactic.link"
+                  target="_blank"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="results.attack.techniques && results.attack.techniques.length"
+            :lines="false"
+            class="pt-0"
+          >
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Techniques: {{ results.attack.techniquesTotal }}
+              </h4></v-list-subheader
+            >
+            <v-list-item
+              v-for="technique in results.attack.techniques"
+              :key="technique.id"
+            >
+              <template v-slot:title="{ tile }">
+                <div
+                  v-html="highLight(`${technique.mitreId} - ${technique.name}`)"
+                ></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div v-html="markdownToHtml(technique.description)"></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="technique.link"
+                  target="_blank"
+                ></v-btn>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-list>
+        <v-list v-if="results.defend">
+          <v-list-subheader>D3FEND:</v-list-subheader>
+          <v-list
+            v-if="results.defend.artifacts && results.defend.artifacts.length"
+          >
+            <v-list-subheader>Artifacts:</v-list-subheader>
+            <v-list-item
+              v-for="artifact in results.defend.artifacts"
+              :key="artifact.id"
+            >
+              {{ artifact }}
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="results.defend.tactics && results.defend.tactics.length"
+          >
+            <v-list-subheader>Tactics:</v-list-subheader>
+            <v-list-item
+              v-for="tactic in results.defend.tactics"
+              :key="tactic.id"
+            >
+              {{ tactic }}
+            </v-list-item>
+          </v-list>
+          <v-list
+            v-if="results.defend.techniques && results.defend.techniques.length"
+          >
+            <v-list-subheader>Techniques:</v-list-subheader>
+            <v-list-item
+              v-for="technique in results.defend.techniques"
+              :key="technique.id"
+            >
+              {{ technique }}
+            </v-list-item>
           </v-list>
         </v-list>
       </v-col>
     </v-row>
+    <!-- TODO: add search config later if wanted
     <v-row justify="center" align-content="center">
       <v-col cols="12" lg="6">
         <v-row justify="center" align-content="center">
@@ -234,6 +408,7 @@
         </v-row>
       </v-col>
     </v-row>
+    -->
   </v-container>
 </template>
 
@@ -241,6 +416,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useSearchStore } from '@/store/search';
 import { useAlertStore } from '@/store/alert';
+import { marked } from 'marked';
 
 // load search history when component is loaded
 onMounted(() => {
@@ -252,13 +428,24 @@ onMounted(() => {
 const searches = computed(() => {
   const searchStore = useSearchStore();
 
-  return searchStore.searches;
+  return searchStore.getSearches;
 });
 
 const results = computed(() => {
   const searchStore = useSearchStore();
+  return searchStore.getResults;
+});
 
-  return searchStore.results;
+const searchId = computed(() => {
+  const searchStore = useSearchStore();
+
+  return searchStore.getCurrentSearchId;
+});
+
+const activeSearchTerm = computed(() => {
+  const searchStore = useSearchStore();
+
+  return searchStore.getCurrentSearchTerm;
 });
 
 const searchTerm = ref('');
@@ -275,10 +462,24 @@ const searchDefendArtifacts = ref(true);
 const searchDefendTactics = ref(true);
 const searchDefendTechniques = ref(true);
 
+function markdownToHtml(markdown) {
+  // TODO: resolve console warnings
+  return marked(highLight(markdown));
+}
+
+function highLight(text) {
+  const regexp = new RegExp(activeSearchTerm.value, 'ig');
+  const highlights = text.replace(regexp, '<mark>$&</mark>');
+  return `${highlights}`;
+}
+
 function search() {
   const searchStore = useSearchStore();
+  const alertStore = useAlertStore();
 
-  searchStore.search(searchTerm.value);
+  searchStore.search(searchTerm.value).catch((error) => {
+    alertStore.initError(error.response.data.message);
+  });
 }
 
 function deleteSearch(searchId: number) {
@@ -291,7 +492,21 @@ function deleteSearch(searchId: number) {
       alertStore.initSuccess('Successfully deleted search');
     })
     .catch((error) => {
-      alertStore.initError(error.reponse.data.message);
+      alertStore.initError(error.response.data.message);
+    });
+}
+
+function loadSearch(searchId: number) {
+  const searchStore = useSearchStore();
+  const alertStore = useAlertStore();
+
+  searchStore
+    .loadSearchById(searchId)
+    .then((res) => {
+      searchTerm.value = res.searchTerm;
+    })
+    .catch((error) => {
+      alertStore.initError(error.response.data.message);
     });
 }
 </script>

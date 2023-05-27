@@ -15,6 +15,9 @@
     "@vuelidate/validators": "^2.0.2",
     "axios": "^1.4.0",
     "core-js": "^3.29.0",
+    "marked": "^5.0.3",
+    "marked-gfm-heading-id": "^3.0.3",
+    "marked-mangle": "^1.0.1",
     "pinia": "^2.0.0",
     "roboto-fontface": "*",
     "vue": "^3.2.0",
@@ -24,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/types": "^7.21.4",
+    "@types/marked": "^5.0.0",
     "@types/node": "^18.15.0",
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-vue": "^3.0.3",

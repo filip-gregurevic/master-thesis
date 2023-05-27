@@ -24,6 +24,9 @@ export class AttackDataSource {
   @Column()
   description: string;
 
+  @Column()
+  link: string;
+
   techniques: AttackTechnique[];
 
   @ManyToMany(() => AttackSoftware)

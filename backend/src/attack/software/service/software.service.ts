@@ -24,7 +24,10 @@ export class AttackSoftwareService {
     );
 
     return this.attackSoftwareRepository.find({
-      where: [{ name: Like(searchTerm) }, { description: Like(searchTerm) }],
+      where: [
+        { name: Like(`%${searchTerm}%`) },
+        { description: Like(`%${searchTerm}%`) },
+      ],
     });
   }
 }

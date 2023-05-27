@@ -6,10 +6,21 @@ export const useSearchStore = defineStore('search', {
   state: () => ({
     searches: [],
     results: [],
+    currentSearchId: -1,
+    currentSearchTerm: '',
   }),
   getters: {
     getSearches(state) {
       return state.searches;
+    },
+    getResults(state) {
+      return state.results;
+    },
+    getCurrentSearchId(state) {
+      return state.currentSearchId;
+    },
+    getCurrentSearchTerm(state) {
+      return state.currentSearchTerm;
     },
   },
   actions: {
@@ -44,9 +55,25 @@ export const useSearchStore = defineStore('search', {
           { searchTerm },
         )
         .then(async (res) => {
-          this.results = res.data;
+          this.results = res.data.results;
+          this.currentSearchId = res.data.id;
+          this.currentSearchTerm = res.data.searchTerm;
 
           await this.loadSearches();
+          return Promise.resolve(res.data);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+    async loadSearchById(searchId: number) {
+      return axios
+        .get(import.meta.env.VITE_BACKEND_URL + '/searches/' + searchId)
+        .then((res) => {
+          this.results = res.data.results;
+          this.currentSearchId = res.data.id;
+          this.currentSearchTerm = res.data.searchTerm;
+
           return Promise.resolve(res.data);
         })
         .catch((error) => {

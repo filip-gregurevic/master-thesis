@@ -17,6 +17,9 @@ export class Search {
   @Column()
   searchTerm: string;
 
+  @Column()
+  results: number;
+
   @ManyToOne(() => User, (user) => user.searches)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;

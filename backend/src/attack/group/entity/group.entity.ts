@@ -24,6 +24,9 @@ export class AttackGroup {
   @Column()
   description: string;
 
+  @Column()
+  link: string;
+
   techniques: AttackTechnique[];
 
   @ManyToMany(() => AttackSoftware)

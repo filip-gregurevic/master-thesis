@@ -24,7 +24,10 @@ export class AttackTacticService {
     );
 
     return this.attackTacticRepository.find({
-      where: [{ name: Like(searchTerm) }, { description: Like(searchTerm) }],
+      where: [
+        { name: Like(`%${searchTerm}%`) },
+        { description: Like(`%${searchTerm}%`) },
+      ],
     });
   }
 }

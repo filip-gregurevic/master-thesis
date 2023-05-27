@@ -1,4 +1,4 @@
 export enum SoftwareType {
-  MALWARE = 'MALWARE',
-  TOOL = 'TOOL',
+  MALWARE = 'malware',
+  TOOL = 'tool',
 }

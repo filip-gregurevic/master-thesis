@@ -23,6 +23,9 @@ export class AttackMitigation {
   @Column()
   description: string;
 
+  @Column()
+  link: string;
+
   @ManyToMany(() => AttackTechnique)
   @JoinTable()
   techniques: AttackTechnique[];

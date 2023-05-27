@@ -35,11 +35,34 @@ export class SearchService {
     search.searchTerm = searchTerm;
     search.user = user;
 
-    await this.searchRepository.save(search);
+    const attack = await this.attackService.search(searchTerm);
+
+    const results = {
+      attack,
+      defend: await this.defendService.search(searchTerm),
+      total: attack.total,
+    };
+
+    search.results = results.total;
+    const savedSearch = await this.searchRepository.save(search);
+
+    return { ...savedSearch, results };
+  }
+
+  async loadSearchById(searchId: number) {
+    this.logger.debug(`Perform search with id: ${searchId}`);
+
+    const search = await this.searchRepository.findOneBy({ id: searchId });
+
+    const attack = await this.attackService.search(search.searchTerm);
 
     return {
-      attack: await this.attackService.search(searchTerm),
-      defend: await this.defendService.search(searchTerm),
+      ...search,
+      results: {
+        attack,
+        defend: await this.defendService.search(search.searchTerm),
+        total: attack.total,
+      },
     };
   }
 

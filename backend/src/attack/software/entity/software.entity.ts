@@ -25,6 +25,15 @@ export class AttackSoftware {
   @Column()
   description: string;
 
+  @Column()
+  link: string;
+
+  @Column()
+  platforms: string;
+
+  @Column()
+  aliases: string;
+
   @Column({
     type: 'enum',
     enum: SoftwareType,

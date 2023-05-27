@@ -23,6 +23,9 @@ export class AttackTechnique {
   @Column()
   description: string;
 
+  @Column()
+  link: string;
+
   @ManyToOne(() => AttackTactic)
   tactic: AttackTactic;
 

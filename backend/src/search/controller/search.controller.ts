@@ -45,6 +45,15 @@ export class SearchController {
 
   @UseGuards(JWTAuthGuard, RolesGuard)
   @Roles(Role.Admin, Role.User)
+  @Get('searches/:searchId')
+  GetSearch(@Param('searchId') searchId: number) {
+    this.logger.log(`Get search with id: ${searchId}`);
+
+    return this.searchService.loadSearchById(searchId);
+  }
+
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.User)
   @Delete('searches/:searchId')
   deleteSearch(@Param('searchId') searchId: number) {
     this.logger.log(`Delete search with id: ${searchId}`);

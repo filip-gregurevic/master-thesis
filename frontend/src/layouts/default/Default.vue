@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar flat>
+    <v-app-bar>
       <v-img
         class="ml-4"
         max-height="32px"

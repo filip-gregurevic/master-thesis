@@ -24,20 +24,44 @@ export class AttackService {
   async search(searchTerm: string) {
     this.logger.debug(`Search mitre attack for ${searchTerm}`);
 
+    const campaigns = await this.attackCampaignService.findBySearchTerm(
+      searchTerm,
+    );
+    const groups = await this.attackGroupService.findBySearchTerm(searchTerm);
+    const mitigations = await this.attackMitigationService.findBySearchTerm(
+      searchTerm,
+    );
+    const software = await this.attackSoftwareService.findBySearchTerm(
+      searchTerm,
+    );
+    const tactics = await this.attackTacticService.findBySearchTerm(searchTerm);
+    const techniques = await this.attackTechniqueService.findBySearchTerm(
+      searchTerm,
+    );
+
     return {
-      campaigns: await this.attackCampaignService.findBySearchTerm(searchTerm),
+      campaigns,
+      campaignsTotal: campaigns.length,
       dataSources: await this.attackDataSourceService.findBySearchTerm(
         searchTerm,
       ),
-      groups: await this.attackGroupService.findBySearchTerm(searchTerm),
-      mitigations: await this.attackMitigationService.findBySearchTerm(
-        searchTerm,
-      ),
-      software: await this.attackSoftwareService.findBySearchTerm(searchTerm),
-      tactics: await this.attackTacticService.findBySearchTerm(searchTerm),
-      techniques: await this.attackTechniqueService.findBySearchTerm(
-        searchTerm,
-      ),
+      groups,
+      groupsTotal: groups.length,
+      mitigations,
+      mitigationsTotal: mitigations.length,
+      software,
+      softwareTotal: software.length,
+      tactics,
+      tacticsTotal: tactics.length,
+      techniques,
+      techniquesTotal: techniques.length,
+      total:
+        campaigns.length +
+        groups.length +
+        mitigations.length +
+        software.length +
+        tactics.length +
+        techniques.length,
     };
   }
 }
