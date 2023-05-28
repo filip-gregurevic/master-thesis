@@ -4,8 +4,8 @@ import { useAuthStore } from '@/store/auth';
 
 export const useSearchStore = defineStore('search', {
   state: () => ({
-    searches: [],
-    results: [],
+    searches: [] as any[],
+    results: undefined as any,
     currentSearchId: -1,
     currentSearchTerm: '',
   }),

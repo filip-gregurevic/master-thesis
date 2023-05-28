@@ -93,22 +93,24 @@
             >
             <v-list-item
               v-for="campaign in results.attack.campaigns"
-              :key="campaign.id"
+              :key="(campaign as any).id"
             >
-              <template v-slot:title="{ tile }">
+              <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${campaign.mitreId} - ${campaign.name}`)"
+                  v-html="highLight(`${(campaign as any).mitreId} - ${(campaign as any).name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml(campaign.description)"></div>
+                <div
+                  v-html="markdownToHtml((campaign as any).description)"
+                ></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="campaign.link"
+                  :href="(campaign as any).link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -126,7 +128,7 @@
             >
             <v-list-item
               v-for="dataSource in results.attack.dataSources"
-              :key="dataSource.id"
+              :key="(dataSource as any).id"
             >
               {{ dataSource }}
             </v-list-item>
@@ -141,21 +143,24 @@
                 Groups: {{ results.attack.groupsTotal }}
               </h4></v-list-subheader
             >
-            <v-list-item v-for="group in results.attack.groups" :key="group.id">
-              <template v-slot:title="{ tile }">
+            <v-list-item
+              v-for="group in results.attack.groups"
+              :key="(group as any).id"
+            >
+              <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${group.mitreId} - ${group.name}`)"
+                  v-html="highLight(`${(group as any).mitreId} - ${(group as any).name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml(group.description)"></div>
+                <div v-html="markdownToHtml((group as any).description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="group.link"
+                  :href="(group as any).link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -175,24 +180,26 @@
             >
             <v-list-item
               v-for="mitigation in results.attack.mitigations"
-              :key="mitigation.id"
+              :key="(mitigation as any).id"
             >
-              <template v-slot:title="{ tile }">
+              <template v-slot:title="{ title }">
                 <div
                   v-html="
-                    highLight(`${mitigation.mitreId} - ${mitigation.name}`)
+                    highLight(`${(mitigation as any).mitreId} - ${(mitigation as any).name}`)
                   "
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml(mitigation.description)"></div>
+                <div
+                  v-html="markdownToHtml((mitigation as any).description)"
+                ></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="mitigation.link"
+                  :href="(mitigation as any).link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -208,19 +215,24 @@
                 Software: {{ results.attack.softwareTotal }}
               </h4></v-list-subheader
             >
-            <v-list-item v-for="sw in results.attack.software" :key="sw.id">
-              <template v-slot:title="{ tile }">
-                <div v-html="highLight(`${sw.mitreId} - ${sw.name}`)"></div>
+            <v-list-item
+              v-for="sw in results.attack.software"
+              :key="(sw as any).id"
+            >
+              <template v-slot:title="{ title }">
+                <div
+                  v-html="highLight(`${(sw as any).mitreId} - ${(sw as any).name}`)"
+                ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml(sw.description)"></div>
+                <div v-html="markdownToHtml((sw as any).description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="sw.link"
+                  :href="(sw as any).link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -238,22 +250,22 @@
             >
             <v-list-item
               v-for="tactic in results.attack.tactics"
-              :key="tactic.id"
+              :key="(tactic as any).id"
             >
-              <template v-slot:title="{ tile }">
+              <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${tactic.mitreId} - ${tactic.name}`)"
+                  v-html="highLight(`${(tactic as any).mitreId} - ${(tactic as any).name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml(tactic.description)"></div>
+                <div v-html="markdownToHtml((tactic as any).description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="tactic.link"
+                  :href="(tactic as any).link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -271,28 +283,31 @@
             >
             <v-list-item
               v-for="technique in results.attack.techniques"
-              :key="technique.id"
+              :key="(technique as any).id"
             >
-              <template v-slot:title="{ tile }">
+              <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${technique.mitreId} - ${technique.name}`)"
+                  v-html="highLight(`${(technique as any).mitreId} - ${(technique as any).name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml(technique.description)"></div>
+                <div
+                  v-html="markdownToHtml((technique as any).description)"
+                ></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="technique.link"
+                  :href="(technique as any).link"
                   target="_blank"
                 ></v-btn>
               </template>
             </v-list-item>
           </v-list>
         </v-list>
+        <!--
         <v-list v-if="results.defend">
           <v-list-subheader>D3FEND:</v-list-subheader>
           <v-list
@@ -329,6 +344,7 @@
             </v-list-item>
           </v-list>
         </v-list>
+        -->
       </v-col>
     </v-row>
     <!-- TODO: add search config later if wanted
@@ -462,12 +478,12 @@ const searchDefendArtifacts = ref(true);
 const searchDefendTactics = ref(true);
 const searchDefendTechniques = ref(true);
 
-function markdownToHtml(markdown) {
+function markdownToHtml(markdown: string) {
   // TODO: resolve console warnings
   return marked(highLight(markdown));
 }
 
-function highLight(text) {
+function highLight(text: string) {
   const regexp = new RegExp(activeSearchTerm.value, 'ig');
   const highlights = text.replace(regexp, '<mark>$&</mark>');
   return `${highlights}`;

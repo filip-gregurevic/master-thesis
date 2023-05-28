@@ -1,13 +1,3 @@
-<template>
+<template></template>
 
-</template>
-
-<script>
-export default {
-  name: "Tactic"
-};
-</script>
-
-<style scoped>
-
-</style>
+<script lang="ts" setup></script>

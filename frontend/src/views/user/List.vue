@@ -158,7 +158,7 @@ onMounted(() => {
   usersStore.loadUsers();
 });
 
-function openEditModal(user) {
+function openEditModal(user: any) {
   editId.value = user.id;
   state.email = user.email;
   state.role = user.role;
@@ -181,9 +181,10 @@ function resetForm(): void {
   v$.value.$reset();
   editId.value = -1;
 
-  for (const [key, value] of Object.entries(initialState)) {
-    state[key] = value;
-  }
+  state.email = initialState.email;
+  state.password = initialState.password;
+  state.passwordRepeated = initialState.passwordRepeated;
+  state.role = initialState.role;
 }
 
 function deleteUser(userId: number) {

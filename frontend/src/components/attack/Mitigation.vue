@@ -1,7 +1,3 @@
-<template>
-  <v-dialog></v-dialog>
-</template>
+<template></template>
 
-<script lang="ts" setup>
-
-</script>
+<script lang="ts" setup></script>
