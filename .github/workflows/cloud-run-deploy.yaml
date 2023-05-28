@@ -1,0 +1,77 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      # Configure Docker with Credentials
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
+
+      # Build the Docker image
+      - name: Build & Publish
+        working-directory: ./backend
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-backend
+          gcloud config set run/region us-central1
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        run: |
+          gcloud run deploy master-thesis-backend --image gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-backend \
+          --platform managed \
+          --allow-unauthenticated \
+          --memory 512M
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      # Configure Docker with Credentials
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
+
+      # Build the Docker image
+      - name: Build & Publish
+        working-directory: ./frontend
+        run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT }}
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-frontend
+          gcloud config set run/region us-central1
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        run: |
+          gcloud run deploy master-thesis-frontend --image gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-frontend \
+          --platform managed \
+          --allow-unauthenticated \
+          --memory 512M
