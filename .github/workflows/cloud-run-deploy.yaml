@@ -13,12 +13,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@v1
+      - name: Auth
+        uses: google-github-actions/auth@v1
         with:
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      # Setup gcloud CLI
+      - name: Setup
+        uses: google-github-actions/setup-gcloud@v1
 
       # Configure Docker with Credentials
       - name: Configure Docker
@@ -31,7 +33,7 @@ jobs:
         run: |
           gcloud config set project ${{ secrets.GCP_PROJECT }}
           gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-backend
-          gcloud config set run/region us-central1
+          gcloud config set run/region europe-west1
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
@@ -39,7 +41,8 @@ jobs:
           gcloud run deploy master-thesis-backend --image gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-backend \
           --platform managed \
           --allow-unauthenticated \
-          --memory 512M
+          --memory 512M \
+          --region europe-west1
 
   frontend:
     name: Frontend
@@ -48,12 +51,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@v1
+      - name: Auth
+        uses: google-github-actions/auth@v1
         with:
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      # Setup gcloud CLI
+      - name: Setup
+        uses: google-github-actions/setup-gcloud@v1
 
       # Configure Docker with Credentials
       - name: Configure Docker
@@ -66,7 +71,7 @@ jobs:
         run: |
           gcloud config set project ${{ secrets.GCP_PROJECT }}
           gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-frontend
-          gcloud config set run/region us-central1
+          gcloud config set run/region europe-west1
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
@@ -74,4 +79,5 @@ jobs:
           gcloud run deploy master-thesis-frontend --image gcr.io/${{ secrets.GCP_PROJECT }}/master-thesis-frontend \
           --platform managed \
           --allow-unauthenticated \
-          --memory 512M
+          --memory 512M \
+          --region europe-west1
