@@ -4,8 +4,8 @@
       <v-row justify="center" align-content="center">
         <v-col cols="auto">
           <v-img
-            max-height="32px"
-            max-width="32px"
+            height="160px"
+            width="160px"
             src="@/assets/logo-cropped.svg"
           ></v-img>
         </v-col>

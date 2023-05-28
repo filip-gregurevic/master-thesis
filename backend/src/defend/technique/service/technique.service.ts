@@ -22,7 +22,9 @@ export class DefendTechniqueService {
     this.logger.debug(`Find technique with name containing: ${searchTerm}`);
 
     return this.defendTechniqueRepository.find({
-      where: [{ name: Like(searchTerm) }],
+      where: [
+        { name: Like(`%${searchTerm}%`), definition: Like(`%${searchTerm}%`) },
+      ],
     });
   }
 }

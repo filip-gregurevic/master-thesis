@@ -36,14 +36,15 @@ export class SearchService {
     search.user = user;
 
     const attack = await this.attackService.search(searchTerm);
+    const defend = await this.defendService.search(searchTerm);
 
     const results = {
       attack,
-      defend: await this.defendService.search(searchTerm),
-      total: attack.total,
+      defend,
+      total: attack.total + defend.total,
     };
 
-    search.results = results.total;
+    search.results = results.total + defend.total;
     const savedSearch = await this.searchRepository.save(search);
 
     return { ...savedSearch, results };
@@ -55,13 +56,14 @@ export class SearchService {
     const search = await this.searchRepository.findOneBy({ id: searchId });
 
     const attack = await this.attackService.search(search.searchTerm);
+    const defend = await this.defendService.search(search.searchTerm);
 
     return {
       ...search,
       results: {
         attack,
-        defend: await this.defendService.search(search.searchTerm),
-        total: attack.total,
+        defend,
+        total: attack.total + defend.total,
       },
     };
   }

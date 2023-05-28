@@ -16,12 +16,14 @@ export class DefendService {
   async search(searchTerm: string) {
     this.logger.debug(`Search MITRE D3FEND for ${searchTerm}`);
 
+    const techniques = await this.defendTechniqueService.findBySearchTerm(
+      searchTerm,
+    );
+
     return {
-      artifacts: await this.defendArtifactService.findBySearchTerm(searchTerm),
-      tactics: await this.defendTacticService.findBySearchTerm(searchTerm),
-      techniques: await this.defendTechniqueService.findBySearchTerm(
-        searchTerm,
-      ),
+      techniques,
+      techniquesTotal: techniques.length,
+      total: techniques.length,
     };
   }
 }

@@ -16,7 +16,7 @@
             color="error"
             icon="mdi-close"
             variant="text"
-            @click.prevent="deleteSearch(search.id)"
+            @click.prevent.stop="deleteSearch(search.id)"
           ></v-btn>
         </template>
       </v-list-item>
@@ -26,8 +26,8 @@
     <v-row justify="center" align-content="center" class="mb-4">
       <v-col cols="auto"
         ><v-img
-          min-height="64px"
-          min-width="64px"
+          height="64px"
+          width="64px"
           src="@/assets/logo-cropped.svg"
         ></v-img
       ></v-col>
@@ -307,44 +307,48 @@
             </v-list-item>
           </v-list>
         </v-list>
-        <!--
-        <v-list v-if="results.defend">
-          <v-list-subheader>D3FEND:</v-list-subheader>
-          <v-list
-            v-if="results.defend.artifacts && results.defend.artifacts.length"
+        <v-list v-if="results.defend && results.defend.total > 0" class="pt-0">
+          <v-list-subheader
+            ><h3 class="text-h5">
+              D3FEND: {{ results.defend.total }}
+            </h3></v-list-subheader
           >
-            <v-list-subheader>Artifacts:</v-list-subheader>
-            <v-list-item
-              v-for="artifact in results.defend.artifacts"
-              :key="artifact.id"
-            >
-              {{ artifact }}
-            </v-list-item>
-          </v-list>
-          <v-list
-            v-if="results.defend.tactics && results.defend.tactics.length"
-          >
-            <v-list-subheader>Tactics:</v-list-subheader>
-            <v-list-item
-              v-for="tactic in results.defend.tactics"
-              :key="tactic.id"
-            >
-              {{ tactic }}
-            </v-list-item>
-          </v-list>
           <v-list
             v-if="results.defend.techniques && results.defend.techniques.length"
+            :lines="false"
+            class="pt-0"
           >
-            <v-list-subheader>Techniques:</v-list-subheader>
+            <v-list-subheader
+              ><h4 class="text-h6">
+                Techniques: {{ results.defend.techniquesTotal }}
+              </h4></v-list-subheader
+            >
             <v-list-item
               v-for="technique in results.defend.techniques"
-              :key="technique.id"
+              :key="(technique as any).id"
             >
-              {{ technique }}
+              <template v-slot:title="{ title }">
+                <div
+                  v-html="highLight(`${(technique as any).mitreId} - ${(technique as any).name}`)"
+                ></div>
+              </template>
+              <template v-slot:subtitle="{ subtitle }">
+                <div
+                  v-html="markdownToHtml((technique as any).definition)"
+                ></div>
+              </template>
+              <template v-slot:append>
+                <v-btn
+                  color="primary"
+                  icon="mdi-open-in-new"
+                  variant="text"
+                  :href="`https://d3fend.mitre.org/technique/d3f:${(technique as any).name.replace(/\s+/g, '')}`"
+                  target="_blank"
+                ></v-btn>
+              </template>
             </v-list-item>
           </v-list>
         </v-list>
-        -->
       </v-col>
     </v-row>
     <!-- TODO: add search config later if wanted

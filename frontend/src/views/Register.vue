@@ -2,6 +2,15 @@
   <v-form @submit.prevent="register">
     <v-container>
       <v-row justify="center" align-content="center">
+        <v-col cols="auto">
+          <v-img
+            height="160px"
+            width="160px"
+            src="@/assets/logo-cropped.svg"
+          ></v-img>
+        </v-col>
+      </v-row>
+      <v-row justify="center" align-content="center">
         <v-col cols="12" md="8" lg="4">
           <h1 class="text-h1">Register</h1>
         </v-col>
