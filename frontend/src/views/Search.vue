@@ -6,7 +6,7 @@
         v-for="search in searches"
         :key="search.id"
         :title="`${search.searchTerm}`"
-        :subtitle="`${search.total} results`"
+        :subtitle="`${search.results.total} results`"
         :active="search.id === searchId"
         active-color="secondary"
         @click.prevent="loadSearch(search.id)"
