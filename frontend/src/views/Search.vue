@@ -1,14 +1,14 @@
 <template>
-  <v-navigation-drawer permanent>
+  <v-navigation-drawer permanent="true">
     <v-list>
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
       <v-list-item
         v-for="search in searches"
         :key="search.id"
         :title="`${search.searchTerm}`"
-        :subtitle="`${search.results.total} results`"
+        :subtitle="`${search.results} results`"
         :active="search.id === searchId"
-        active-color="secondary"
+        color="secondary"
         @click.prevent="loadSearch(search.id)"
       >
         <template v-slot:append>
@@ -26,8 +26,8 @@
     <v-row justify="center" align-content="center" class="mb-4">
       <v-col cols="auto"
         ><v-img
-          height="64px"
-          width="64px"
+          height="50px"
+          width="50px"
           src="@/assets/logo-cropped.svg"
         ></v-img
       ></v-col>
@@ -45,7 +45,11 @@
           ></v-text-field>
         </v-col>
         <v-col cols="1">
-          <v-btn type="submit" block color="primary" :disabled="!searchTerm"
+          <v-btn
+            type="submit"
+            block="true"
+            color="primary"
+            :disabled="!searchTerm"
             >Go</v-btn
           >
         </v-col>
@@ -93,29 +97,28 @@
             >
             <v-list-item
               v-for="campaign in results.attack.campaigns"
-              :key="(campaign as any).id"
+              :key="campaign.id"
             >
               <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${(campaign as any).mitreId} - ${(campaign as any).name}`)"
+                  v-html="highLight(`${campaign.mitreId} - ${campaign.name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div
-                  v-html="markdownToHtml((campaign as any).description)"
-                ></div>
+                <div v-html="markdownToHtml(campaign.description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="(campaign as any).link"
+                  :href="campaign.link"
                   target="_blank"
                 ></v-btn>
               </template>
             </v-list-item>
           </v-list>
+          <!--
           <v-list
             v-if="
               results.attack.dataSources && results.attack.dataSources.length
@@ -133,6 +136,7 @@
               {{ dataSource }}
             </v-list-item>
           </v-list>
+          -->
           <v-list
             v-if="results.attack.groups && results.attack.groups.length"
             :lines="false"
@@ -143,24 +147,21 @@
                 Groups: {{ results.attack.groupsTotal }}
               </h4></v-list-subheader
             >
-            <v-list-item
-              v-for="group in results.attack.groups"
-              :key="(group as any).id"
-            >
+            <v-list-item v-for="group in results.attack.groups" :key="group.id">
               <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${(group as any).mitreId} - ${(group as any).name}`)"
+                  v-html="highLight(`${group.mitreId} - ${group.name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml((group as any).description)"></div>
+                <div v-html="markdownToHtml(group.description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="(group as any).link"
+                  :href="group.link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -180,26 +181,24 @@
             >
             <v-list-item
               v-for="mitigation in results.attack.mitigations"
-              :key="(mitigation as any).id"
+              :key="mitigation.id"
             >
               <template v-slot:title="{ title }">
                 <div
                   v-html="
-                    highLight(`${(mitigation as any).mitreId} - ${(mitigation as any).name}`)
+                    highLight(`${mitigation.mitreId} - ${mitigation.name}`)
                   "
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div
-                  v-html="markdownToHtml((mitigation as any).description)"
-                ></div>
+                <div v-html="markdownToHtml(mitigation.description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="(mitigation as any).link"
+                  :href="mitigation.link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -215,24 +214,19 @@
                 Software: {{ results.attack.softwareTotal }}
               </h4></v-list-subheader
             >
-            <v-list-item
-              v-for="sw in results.attack.software"
-              :key="(sw as any).id"
-            >
+            <v-list-item v-for="sw in results.attack.software" :key="sw.id">
               <template v-slot:title="{ title }">
-                <div
-                  v-html="highLight(`${(sw as any).mitreId} - ${(sw as any).name}`)"
-                ></div>
+                <div v-html="highLight(`${sw.mitreId} - ${sw.name}`)"></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml((sw as any).description)"></div>
+                <div v-html="markdownToHtml(sw.description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="(sw as any).link"
+                  :href="sw.link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -250,22 +244,22 @@
             >
             <v-list-item
               v-for="tactic in results.attack.tactics"
-              :key="(tactic as any).id"
+              :key="tactic.id"
             >
               <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${(tactic as any).mitreId} - ${(tactic as any).name}`)"
+                  v-html="highLight(`${tactic.mitreId} - ${tactic.name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div v-html="markdownToHtml((tactic as any).description)"></div>
+                <div v-html="markdownToHtml(tactic.description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="(tactic as any).link"
+                  :href="tactic.link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -283,24 +277,22 @@
             >
             <v-list-item
               v-for="technique in results.attack.techniques"
-              :key="(technique as any).id"
+              :key="technique.id"
             >
               <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${(technique as any).mitreId} - ${(technique as any).name}`)"
+                  v-html="highLight(`${technique.mitreId} - ${technique.name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div
-                  v-html="markdownToHtml((technique as any).description)"
-                ></div>
+                <div v-html="markdownToHtml(technique.description)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="(technique as any).link"
+                  :href="technique.link"
                   target="_blank"
                 ></v-btn>
               </template>
@@ -325,24 +317,25 @@
             >
             <v-list-item
               v-for="technique in results.defend.techniques"
-              :key="(technique as any).id"
+              :key="technique.id"
             >
               <template v-slot:title="{ title }">
                 <div
-                  v-html="highLight(`${(technique as any).mitreId} - ${(technique as any).name}`)"
+                  v-html="highLight(`${technique.mitreId} - ${technique.name}`)"
                 ></div>
               </template>
               <template v-slot:subtitle="{ subtitle }">
-                <div
-                  v-html="markdownToHtml((technique as any).definition)"
-                ></div>
+                <div v-html="markdownToHtml(technique.definition)"></div>
               </template>
               <template v-slot:append>
                 <v-btn
                   color="primary"
                   icon="mdi-open-in-new"
                   variant="text"
-                  :href="`https://d3fend.mitre.org/technique/d3f:${(technique as any).name.replace(/\s+/g, '')}`"
+                  :href="`https://d3fend.mitre.org/technique/d3f:${technique.name.replace(
+                    /\s+/g,
+                    '',
+                  )}`"
                   target="_blank"
                 ></v-btn>
               </template>

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AttackCampaign } from '../entity/campaign.entity';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class AttackCampaignService {
@@ -25,8 +25,8 @@ export class AttackCampaignService {
 
     return this.attackCampaignRepository.find({
       where: [
-        { name: Like(`%${searchTerm}%`) },
-        { description: Like(`%${searchTerm}%`) },
+        { name: ILike(`%${searchTerm}%`) },
+        { description: ILike(`%${searchTerm}%`) },
       ],
     });
   }

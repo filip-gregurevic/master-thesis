@@ -44,7 +44,7 @@ export class SearchService {
       total: attack.total + defend.total,
     };
 
-    search.results = results.total + defend.total;
+    search.results = results.total;
     const savedSearch = await this.searchRepository.save(search);
 
     return { ...savedSearch, results };

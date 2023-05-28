@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DefendArtifact } from '../entity/artifact.entity';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class DefendArtifactService {
@@ -22,7 +22,7 @@ export class DefendArtifactService {
     this.logger.debug(`Find artifact with name containing: ${searchTerm}`);
 
     return this.defendArtifactRepository.find({
-      where: [{ name: Like(searchTerm) }],
+      where: [{ name: ILike(searchTerm) }],
     });
   }
 }

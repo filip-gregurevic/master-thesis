@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DefendTactic } from '../entity/tactic.entity';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class DefendTacticService {
@@ -22,7 +22,7 @@ export class DefendTacticService {
     this.logger.debug(`Find tactic with name containing: ${searchTerm}`);
 
     return this.defendTacticRepository.find({
-      where: [{ name: Like(searchTerm) }],
+      where: [{ name: ILike(searchTerm) }],
     });
   }
 }

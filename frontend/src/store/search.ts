@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useAuthStore } from '@/store/auth';
+import { Results, SearchResult } from '@/types/search';
 
 export const useSearchStore = defineStore('search', {
   state: () => ({
     searches: [] as any[],
-    results: undefined as any,
+    results: undefined as Results | undefined,
     currentSearchId: -1,
     currentSearchTerm: '',
   }),
@@ -46,8 +47,8 @@ export const useSearchStore = defineStore('search', {
     async search(searchTerm: string) {
       const authStore = useAuthStore();
 
-      const res = await axios
-        .post(
+      return await axios
+        .post<SearchResult>(
           import.meta.env.VITE_BACKEND_URL +
             '/users/' +
             authStore.user.id +

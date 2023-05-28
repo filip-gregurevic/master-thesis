@@ -36,7 +36,7 @@
     width="auto"
     @after-leave="resetForm"
   >
-    <v-card class="pa-4">
+    <v-card class="pa-4" min-width="50vw">
       <v-container>
         <v-row justify="center" align-content="center">
           <v-col cols="12">

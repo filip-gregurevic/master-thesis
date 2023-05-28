@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AttackDataSource } from '../entity/data-source.entity';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class AttackDataSourceService {
@@ -24,7 +24,7 @@ export class AttackDataSourceService {
     );
 
     return this.attackDataSourceRepository.find({
-      where: [{ name: Like(searchTerm) }, { description: Like(searchTerm) }],
+      where: [{ name: ILike(searchTerm) }, { description: ILike(searchTerm) }],
     });
   }
 }
