@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent="true">
+  <v-navigation-drawer :permanent="true">
     <v-list>
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
       <v-list-item
@@ -47,7 +47,7 @@
         <v-col cols="1">
           <v-btn
             type="submit"
-            block="true"
+            :block="true"
             color="primary"
             :disabled="!searchTerm"
             >Go</v-btn
