@@ -51,7 +51,7 @@ export class SearchService {
   }
 
   async loadSearchById(searchId: number) {
-    this.logger.debug(`Perform search with id: ${searchId}`);
+    this.logger.debug(`Load search with id: ${searchId}`);
 
     const search = await this.searchRepository.findOneBy({ id: searchId });
 

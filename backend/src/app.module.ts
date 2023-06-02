@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { SearchModule } from './search/search.module';
 import { AttackModule } from './attack/attack.module';
 import { DefendModule } from './defend/defend.module';
+import { NLPModule } from './nlp/nlp.module';
+import { ChatGPTModule } from './chat-gpt/chat-gpt.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { DefendModule } from './defend/defend.module';
     SearchModule,
     AttackModule,
     DefendModule,
+    NLPModule,
+    ChatGPTModule,
   ],
   controllers: [AppController],
   providers: [AppService],

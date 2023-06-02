@@ -1,4 +1,10 @@
-# essentials
+# Filip Gregurević Master Thesis
+
+## Prerequisits
+
+## Frontend
+
+```h```
 
 ## Project setup
 

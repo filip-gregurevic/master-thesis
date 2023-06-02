@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   frontend:
+    container_name: master-thesis-frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -9,6 +10,7 @@ services:
     ports:
       - "3000:3000"
   backend:
+    container_name: master-thesis-backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -18,6 +20,7 @@ services:
       - "3333:3333"
   database:
     image: postgres:13
+    container_name: master-thesis-database
     restart: always
     ports:
       - "5432:5432"
@@ -27,6 +30,42 @@ services:
       POSTGRES_DB: "master-thesis"
     volumes:
       - database:/var/lib/postgresql/data
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.7.1
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    volumes:
+      - kibana-data:/usr/share/kibana/data
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+
 volumes:
   database:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  kibana-data:
     driver: local

@@ -13,6 +13,16 @@ const routes = [
         component: () => import('@/views/Search.vue'),
       },
       {
+        path: 'nlp',
+        name: 'NLP',
+        component: () => import('@/views/NLP.vue'),
+      },
+      {
+        path: 'chat-gpt',
+        name: 'ChatGPT',
+        component: () => import('@/views/ChatGPT.vue'),
+      },
+      {
         path: 'users',
         name: 'Users',
         children: [
