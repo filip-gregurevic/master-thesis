@@ -10,12 +10,17 @@
       <v-app-bar-title>
         Filip Gregurević's Master Thesis Project
       </v-app-bar-title>
-      <router-link class="mr-4" to="search">Search</router-link>
-      <router-link class="mr-4" to="nlp">NLP</router-link>
-      <router-link class="mr-4" to="chat-gpt">ChatGPT</router-link>
-      <router-link v-if="authUser && authUser.role === 'admin'" to="users"
-        >User Management</router-link
-      >
+        <v-btn color="primary" class="mr-4" to="search">
+          Search
+        </v-btn>
+        <v-btn color="primary" class="mr-4" to="nlp">
+          NLP
+        </v-btn>
+        <v-btn color="primary" class="mr-4" to="chat-gpt">
+          ChatGPT
+        </v-btn><v-btn color="primary" v-if="authUser && authUser.role === 'admin'" to="users">
+        User Management
+      </v-btn>
       <v-spacer />
       <v-btn
         @click="toggleTheme"

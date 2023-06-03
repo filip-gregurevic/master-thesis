@@ -1,4 +1,11 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../../user/entity/user.entity';
 
 @Entity()
@@ -8,7 +15,10 @@ export class NLPSearch {
   })
   id: number;
 
-  @ManyToOne(() => User, (user) => user.searches)
+  @Column()
+  sentence: string;
+
+  @ManyToOne(() => User, (user) => user.nlpSearches)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 }

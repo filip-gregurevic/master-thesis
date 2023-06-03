@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JWTAuthGuard } from '../../auth/guard/jwt-auth.guard';
@@ -37,6 +39,24 @@ export class NLPController {
   ) {
     this.logger.log(`User with id ${userId} searched for: ${search.sentence}`);
 
-    return this.nlpService.search(search.sentence);
+    return this.nlpService.search(userId, search.sentence);
+  }
+
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.User)
+  @Get('nlp/:id')
+  async loadNLPSearchById(@Param('id') id: number): Promise<any> {
+    this.logger.log(`Load NLP search with id: ${id}`);
+
+    return this.nlpService.loadById(id);
+  }
+
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.User)
+  @Delete('nlp/:id')
+  async deleteNLPSearch(@Param('id') id: number): Promise<any> {
+    this.logger.log(`Delete NLP search with id: ${id}`);
+
+    return this.nlpService.deleteById(id);
   }
 }

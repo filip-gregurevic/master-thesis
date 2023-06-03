@@ -4,14 +4,13 @@ import { Conversation } from './entity/conversation.entity';
 import { UserModule } from '../user/user.module';
 import { ChatGPTController } from './controller/chat-gpt.controller';
 import { ChatGPTService } from './service/chat-gpt.service';
-import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
+import { Message } from './entity/message.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Conversation]),
+    TypeOrmModule.forFeature([Conversation, Message]),
     UserModule,
-    HttpModule,
     ConfigModule,
   ],
   controllers: [ChatGPTController],

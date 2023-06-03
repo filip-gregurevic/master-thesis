@@ -37,5 +37,5 @@ export class User {
   nlpSearches: NLPSearch[];
 
   @OneToMany(() => Conversation, (conversation) => conversation.user)
-  conversation: Conversation[];
+  conversations: Conversation[];
 }

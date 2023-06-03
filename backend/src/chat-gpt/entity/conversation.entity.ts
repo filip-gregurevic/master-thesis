@@ -1,5 +1,12 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../../user/entity/user.entity';
+import { Message } from './message.entity';
 
 @Entity()
 export class Conversation {
@@ -8,7 +15,13 @@ export class Conversation {
   })
   id: number;
 
-  @ManyToOne(() => User, (user) => user.searches)
+  @OneToMany(() => Message, (message) => message.conversation)
+  messages: Message[];
+
+  @ManyToOne(() => User, (user) => user.conversations, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 }

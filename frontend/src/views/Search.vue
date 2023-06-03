@@ -2,24 +2,25 @@
   <v-navigation-drawer :permanent="true">
     <v-list>
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
-      <v-list-item
-        v-for="search in searches"
-        :key="search.id"
-        :title="`${search.searchTerm}`"
-        :subtitle="`${search.results} results`"
-        :active="search.id === searchId"
-        color="secondary"
-        @click.prevent="loadSearch(search.id)"
-      >
-        <template v-slot:append>
-          <v-btn
-            color="error"
-            icon="mdi-close"
-            variant="text"
-            @click.prevent.stop="deleteSearch(search.id)"
-          ></v-btn>
-        </template>
-      </v-list-item>
+      <template v-for="search in searches" :key="search.id">
+        <v-list-item
+          :title="`${search.searchTerm}`"
+          :subtitle="`${search.results} results`"
+          :active="search.id === searchId"
+          color="secondary"
+          @click.prevent="loadSearch(search.id)"
+        >
+          <template v-slot:append>
+            <v-btn
+              color="error"
+              icon="mdi-close"
+              variant="text"
+              @click.prevent.stop="deleteSearch(search.id)"
+            ></v-btn>
+          </template>
+        </v-list-item>
+        <v-divider></v-divider>
+      </template>
     </v-list>
   </v-navigation-drawer>
   <v-container class="mt-8">

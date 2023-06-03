@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from '@/store/auth';
 import axios from 'axios';
-import { SearchResult } from '@/types/search';
 
 export const useNLPStore = defineStore('mlp', {
   state: () => ({
@@ -16,6 +15,9 @@ export const useNLPStore = defineStore('mlp', {
     },
     getResults(state) {
       return state.results;
+    },
+    getCurrentSearchId(state) {
+      return state.currentSearchId;
     },
   },
   actions: {
@@ -50,12 +52,38 @@ export const useNLPStore = defineStore('mlp', {
           { sentence },
         )
         .then(async (res) => {
-          this.results = res.data.results;
+          this.results = res.data.hits;
           this.currentSearchId = res.data.id;
           this.currentSentence = res.data.sentence;
 
           await this.loadSearches();
           return Promise.resolve(res.data);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+    async loadSearchById(searchId: number) {
+      return axios
+        .get(import.meta.env.VITE_BACKEND_URL + '/nlp/' + searchId)
+        .then((res) => {
+          this.results = res.data.hits;
+          this.currentSearchId = res.data.id;
+          this.currentSentence = res.data.sentence;
+
+          return Promise.resolve(res.data);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+    async deleteSearchById(searchId: number) {
+      return axios
+        .delete(import.meta.env.VITE_BACKEND_URL + '/nlp/' + searchId)
+        .then(async () => {
+          await this.loadSearches();
+
+          return Promise.resolve();
         })
         .catch((error) => {
           return Promise.reject(error);
