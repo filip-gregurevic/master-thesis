@@ -8,6 +8,8 @@ export const useNLPStore = defineStore('mlp', {
     results: undefined as any | undefined,
     currentSearchId: -1,
     currentSentence: '',
+    isSidebarOpen: false,
+    isLoading: false,
   }),
   getters: {
     getSearches(state) {
@@ -18,6 +20,12 @@ export const useNLPStore = defineStore('mlp', {
     },
     getCurrentSearchId(state) {
       return state.currentSearchId;
+    },
+    getIsSidebarOpen(state) {
+      return state.isSidebarOpen;
+    },
+    getIsLoading(state) {
+      return state.isLoading;
     },
   },
   actions: {
@@ -88,6 +96,9 @@ export const useNLPStore = defineStore('mlp', {
         .catch((error) => {
           return Promise.reject(error);
         });
+    },
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
     },
   },
 });

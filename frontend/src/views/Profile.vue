@@ -6,72 +6,76 @@
           <h1 class="text-h1">My Profile</h1>
         </v-col>
       </v-row>
-      <v-row justify="center" align-content="center">
+      <v-row align-content="center" justify="center">
         <v-col cols="12" md="6">
           <v-text-field
-            variant="outlined"
             v-model="state.email"
+            :error-messages="v$.email.$errors.map((e) => e.$message as string)"
             label="E-Mail"
             required
-            :error-messages="v$.email.$errors.map((e) => e.$message as string)"
-            @input="v$.email.$touch"
+            variant="outlined"
             @blur="v$.email.$touch"
+            @update:model-value="v$.email.$touch"
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6">
           <v-select
-            variant="outlined"
-            :items="['user', 'admin']"
             v-model="state.role"
+            :error-messages="v$.role.$errors.map((e) => e.$message as string)"
+            :items="['user', 'admin']"
             label="Role"
             required
-            :error-messages="v$.role.$errors.map((e) => e.$message as string)"
-            @change="v$.role.$touch"
+            variant="outlined"
             @blur="v$.role.$touch"
+            @update:modelValue="v$.role.$touch"
           ></v-select>
         </v-col>
       </v-row>
-      <v-row justify="center" align-content="center">
+      <v-row align-content="center" justify="center">
         <v-col cols="12" md="6">
           <v-text-field
-            variant="outlined"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
             v-model="state.password"
-            label="New Password"
-            autocomplete="new-password"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :error-messages="v$.password.$errors.map((e) => e.$message as string)"
-            @click:append="showPassword = !showPassword"
-            @input="v$.password.$touch"
+            :type="showPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            label="New Password"
+            variant="outlined"
             @blur="v$.password.$touch"
+            @click:append="showPassword = !showPassword"
+            @update:modelValue="v$.password.$touch"
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            variant="outlined"
-            :append-icon="showPasswordRepeated ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPasswordRepeated ? 'text' : 'password'"
             v-model="state.passwordRepeated"
-            label="Repeat New Password"
+            :append-icon="showPasswordRepeated ? 'mdi-eye' : 'mdi-eye-off'"
             :error-messages="v$.passwordRepeated.$errors.map((e) => e.$message as string)"
-            @click:append="showPasswordRepeated = !showPasswordRepeated"
-            @input="v$.passwordRepeated.$touch"
+            :type="showPasswordRepeated ? 'text' : 'password'"
+            label="Repeat New Password"
+            variant="outlined"
             @blur="v$.passwordRepeated.$touch"
+            @click:append="showPasswordRepeated = !showPasswordRepeated"
+            @update:modelValue="v$.passwordRepeated.$touch"
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row justify="center" align-content="center">
-        <v-col cols="12" md="8" lg="4">
-          <v-btn block color="primary" type="submit" :disabled="v$.$invalid"
-            >Save Changes</v-btn
-          >
+      <v-row align-content="center" justify="center">
+        <v-col cols="12" lg="4" md="8">
+          <v-btn
+            :block="true"
+            :disabled="v$.$invalid"
+            color="primary"
+            type="submit"
+            >Save Changes
+          </v-btn>
         </v-col>
       </v-row>
-      <v-row justify="center" align-content="center">
-        <v-col cols="12" md="8" lg="4">
-          <v-btn block color="error" @click="deleteProfile">
-            Delete my account</v-btn
-          >
+      <v-row align-content="center" justify="center">
+        <v-col cols="12" lg="4" md="8">
+          <v-btn :block="true" color="error" @click="deleteProfile">
+            Delete my account
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>

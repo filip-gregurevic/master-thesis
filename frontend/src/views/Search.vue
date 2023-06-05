@@ -1,12 +1,12 @@
 <template>
-  <v-navigation-drawer :permanent="true">
+  <v-navigation-drawer v-model="isSidebarOpen" :temporary="true">
     <v-list>
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
       <template v-for="search in searches" :key="search.id">
         <v-list-item
-          :title="`${search.searchTerm}`"
-          :subtitle="`${search.results} results`"
           :active="search.id === searchId"
+          :subtitle="`${search.results} results`"
+          :title="`${search.searchTerm}`"
           color="secondary"
           @click.prevent="loadSearch(search.id)"
         >
@@ -16,7 +16,11 @@
               icon="mdi-close"
               variant="text"
               @click.prevent.stop="deleteSearch(search.id)"
-            ></v-btn>
+            >
+              <v-tooltip activator="parent" location="bottom"
+                >Delete Search
+              </v-tooltip>
+            </v-btn>
           </template>
         </v-list-item>
         <v-divider></v-divider>
@@ -24,44 +28,47 @@
     </v-list>
   </v-navigation-drawer>
   <v-container class="mt-8">
-    <v-row justify="center" align-content="center" class="mb-4">
-      <v-col cols="auto"
-        ><v-img
+    <v-row align-content="center" class="mb-4" justify="center">
+      <v-col cols="auto">
+        <v-img
           height="50px"
-          width="50px"
           src="@/assets/logo-cropped.svg"
-        ></v-img
-      ></v-col>
+          width="50px"
+        ></v-img>
+      </v-col>
       <v-col cols="auto"
         ><h1 class="text-h3">Search MITRE ATT4CK & D3FEND</h1></v-col
       >
     </v-row>
     <v-form @submit.prevent="search">
-      <v-row justify="center" align-content="center">
-        <v-col cols="10" md="8" lg="8">
+      <v-row align-content="center" justify="center">
+        <v-col cols="10" lg="8" md="8">
           <v-text-field
-            variant="outlined"
-            placeholder="Search..."
             v-model="searchTerm"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="1">
-          <v-btn
-            type="submit"
-            :block="true"
-            color="primary"
-            :disabled="!searchTerm"
-            >Go</v-btn
+            placeholder="Search..."
+            variant="outlined"
           >
+            <template v-slot:append-inner>
+              <v-col cols="1">
+                <v-btn
+                  :block="true"
+                  :disabled="!searchTerm"
+                  color="primary"
+                  type="submit"
+                  >Go
+                </v-btn>
+              </v-col>
+            </template>
+          </v-text-field>
         </v-col>
       </v-row>
     </v-form>
     <v-row
       v-if="results && results.total === 0"
-      justify="center"
+      :dense="true"
       align-content="center"
-      dense
       class="context"
+      justify="center"
     >
       <v-col cols="auto">
         <h2 class="text-h4">
@@ -71,12 +78,12 @@
     </v-row>
     <v-row
       v-if="results && results.total > 0"
-      justify="center"
+      :dense="true"
       align-content="center"
-      dense
       class="context"
+      justify="center"
     >
-      <v-col cols="12" class="py-0">
+      <v-col class="py-0" cols="12">
         <h2 class="text-h4">{{ results.total }} Results</h2>
       </v-col>
       <v-col cols="12">
@@ -110,11 +117,11 @@
               </template>
               <template v-slot:append>
                 <v-btn
+                  :href="campaign.link"
                   color="primary"
                   icon="mdi-open-in-new"
-                  variant="text"
-                  :href="campaign.link"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -159,11 +166,11 @@
               </template>
               <template v-slot:append>
                 <v-btn
+                  :href="group.link"
                   color="primary"
                   icon="mdi-open-in-new"
-                  variant="text"
-                  :href="group.link"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -196,11 +203,11 @@
               </template>
               <template v-slot:append>
                 <v-btn
+                  :href="mitigation.link"
                   color="primary"
                   icon="mdi-open-in-new"
-                  variant="text"
-                  :href="mitigation.link"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -224,11 +231,11 @@
               </template>
               <template v-slot:append>
                 <v-btn
+                  :href="sw.link"
                   color="primary"
                   icon="mdi-open-in-new"
-                  variant="text"
-                  :href="sw.link"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -257,11 +264,11 @@
               </template>
               <template v-slot:append>
                 <v-btn
+                  :href="tactic.link"
                   color="primary"
                   icon="mdi-open-in-new"
-                  variant="text"
-                  :href="tactic.link"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -290,11 +297,11 @@
               </template>
               <template v-slot:append>
                 <v-btn
+                  :href="technique.link"
                   color="primary"
                   icon="mdi-open-in-new"
-                  variant="text"
-                  :href="technique.link"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -330,14 +337,14 @@
               </template>
               <template v-slot:append>
                 <v-btn
-                  color="primary"
-                  icon="mdi-open-in-new"
-                  variant="text"
                   :href="`https://d3fend.mitre.org/technique/d3f:${technique.name.replace(
                     /\s+/g,
                     '',
                   )}`"
+                  color="primary"
+                  icon="mdi-open-in-new"
                   target="_blank"
+                  variant="text"
                 ></v-btn>
               </template>
             </v-list-item>
@@ -462,19 +469,27 @@ const activeSearchTerm = computed(() => {
   return searchStore.getCurrentSearchTerm;
 });
 
+const isSidebarOpen = computed(() => {
+  const searchStore = useSearchStore();
+
+  return searchStore.getIsSidebarOpen;
+});
+
 const searchTerm = ref('');
 
-const searchAttack = ref(true);
-const searchDefend = ref(true);
-const searchAttackCampaigns = ref(true);
-const searchAttackDataSources = ref(true);
-const searchAttackGroups = ref(true);
-const searchAttackMitigations = ref(true);
-const searchAttackSoftware = ref(true);
-const searchAttackTechniques = ref(true);
-const searchDefendArtifacts = ref(true);
-const searchDefendTactics = ref(true);
-const searchDefendTechniques = ref(true);
+/* Add back if search configuration is going to be implemented
+ * const searchAttack = ref(true);
+ * const searchDefend = ref(true);
+ * const searchAttackCampaigns = ref(true);
+ * const searchAttackDataSources = ref(true);
+ * const searchAttackGroups = ref(true);
+ * const searchAttackMitigations = ref(true);
+ * const searchAttackSoftware = ref(true);
+ * const searchAttackTechniques = ref(true);
+ * const searchDefendArtifacts = ref(true);
+ * const searchDefendTactics = ref(true);
+ * const searchDefendTechniques = ref(true);
+ */
 
 function markdownToHtml(markdown: string) {
   // TODO: resolve console warnings

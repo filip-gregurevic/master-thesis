@@ -1,19 +1,25 @@
 <template>
-  <v-navigation-drawer :permanent="true">
+  <v-navigation-drawer v-model="isSidebarOpen" :temporary="true">
     <v-list lines="three">
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
-      <template
-        v-for="search in searches"
-        :key="search.id"
-      >
+      <template v-for="search in searches" :key="search.id">
         <v-list-item
-          :subtitle="`${search.sentence}`"
           :active="search.id === searchId"
+          :subtitle="`${search.sentence}`"
           color="secondary"
           @click.prevent="loadSearch(search.id)"
         >
           <template v-slot:append>
-            <v-btn color="error" icon="mdi-close" variant="text" @click.prevent.stop="deleteSearch(search.id)"></v-btn>
+            <v-btn
+              color="error"
+              icon="mdi-close"
+              variant="text"
+              @click.prevent.stop="deleteSearch(search.id)"
+            >
+              <v-tooltip activator="parent" location="bottom"
+                >Delete Search
+              </v-tooltip>
+            </v-btn>
           </template>
         </v-list-item>
         <v-divider></v-divider>
@@ -26,16 +32,22 @@
         <v-col cols="10" lg="8" md="8">
           <v-textarea
             v-model="sentence"
+            auto-grow
             placeholder="Write a full sentence"
             variant="outlined"
-            auto-grow
-          ></v-textarea>
-        </v-col>
-        <v-col cols="1">
-          <v-btn :block="true" :disabled="!sentence" color="primary" type="submit"
-          >Go
-          </v-btn
           >
+            <template v-slot:append-inner>
+              <v-col cols="1">
+                <v-btn
+                  :block="true"
+                  :disabled="!sentence"
+                  color="primary"
+                  type="submit"
+                  >Go
+                </v-btn>
+              </v-col>
+            </template>
+          </v-textarea>
         </v-col>
       </v-row>
     </v-form>
@@ -43,7 +55,9 @@
       <v-list-item v-for="result in results" :key="result.id">
         <template v-slot:title="{ title }">
           <div v-html="`${result._source.ID} - ${result._source.name}`"></div>
-          <div class="text-primary">{{ Math.floor(result._score * 100) }}% match</div>
+          <div class="text-primary">
+            {{ Math.floor(result._score * 100) }}% match
+          </div>
         </template>
         <template v-slot:subtitle="{ subtitle }">
           <div v-html="markdownToHtml(result._source.description)"></div>
@@ -63,11 +77,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue";
-import { useNLPStore } from "@/store/nlp";
-import { useAlertStore } from "@/store/alert";
-import { marked } from "marked";
-import { useSearchStore } from "@/store/search";
+import { computed, onMounted, ref } from 'vue';
+import { useNLPStore } from '@/store/nlp';
+import { useAlertStore } from '@/store/alert';
+import { marked } from 'marked';
 
 // load search history when component is loaded
 onMounted(() => {
@@ -94,7 +107,13 @@ const searchId = computed(() => {
   return nlpStore.getCurrentSearchId;
 });
 
-const sentence = ref("");
+const isSidebarOpen = computed(() => {
+  const nlpStore = useNLPStore();
+
+  return nlpStore.getIsSidebarOpen;
+});
+
+const sentence = ref('');
 
 function markdownToHtml(markdown: string) {
   // TODO: resolve console warnings
@@ -115,13 +134,13 @@ function loadSearch(searchId: number) {
   const alertStore = useAlertStore();
 
   nlpStore
-  .loadSearchById(searchId)
-  .then((search) => {
-    sentence.value = search.sentence;
-  })
-  .catch((error) => {
-    alertStore.initError(error.response.data.message);
-  });
+    .loadSearchById(searchId)
+    .then((search) => {
+      sentence.value = search.sentence;
+    })
+    .catch((error) => {
+      alertStore.initError(error.response.data.message);
+    });
 }
 
 function deleteSearch(searchId: number) {
@@ -129,12 +148,12 @@ function deleteSearch(searchId: number) {
   const alertStore = useAlertStore();
 
   nlpStore
-  .deleteSearchById(searchId)
-  .then(() => {
-    alertStore.initSuccess('Successfully deleted search');
-  })
-  .catch((error) => {
-    alertStore.initError(error.response.data.message);
-  });
+    .deleteSearchById(searchId)
+    .then(() => {
+      alertStore.initSuccess('Successfully deleted search');
+    })
+    .catch((error) => {
+      alertStore.initError(error.response.data.message);
+    });
 }
 </script>

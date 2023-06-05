@@ -7,6 +7,7 @@ export const useChatGPTStore = defineStore('chat-gpt', {
     conversations: [],
     currentConversation: undefined as any | undefined,
     isLoading: false,
+    isSidebarOpen: false,
   }),
   getters: {
     getConversations(state) {
@@ -17,6 +18,9 @@ export const useChatGPTStore = defineStore('chat-gpt', {
     },
     getIsLoading(state) {
       return state.isLoading;
+    },
+    getIsSidebarOpen(state) {
+      return state.isSidebarOpen;
     },
   },
   actions: {
@@ -79,7 +83,7 @@ export const useChatGPTStore = defineStore('chat-gpt', {
         await this.createConversation(message);
       }
     },
-    createConversation(message) {
+    createConversation(message: string) {
       const authStore = useAuthStore();
 
       this.isLoading = true;
@@ -105,7 +109,7 @@ export const useChatGPTStore = defineStore('chat-gpt', {
           this.isLoading = false;
         });
     },
-    continueConversation(message) {
+    continueConversation(message: string) {
       this.isLoading = true;
       return axios
         .patch(
@@ -128,6 +132,24 @@ export const useChatGPTStore = defineStore('chat-gpt', {
           this.isLoading = false;
         });
     },
+    async changeConversationName(conversationId: number, name: string) {
+      return axios
+        .patch(
+          import.meta.env.VITE_BACKEND_URL +
+            '/chat-gpt/conversations/' +
+            this.currentConversation.id +
+            '/name',
+          { name },
+        )
+        .then(async (res) => {
+          await this.loadConversations();
+
+          return Promise.resolve(res.data);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
     deleteConversationById(conversationId: number) {
       return axios
         .delete(
@@ -143,6 +165,9 @@ export const useChatGPTStore = defineStore('chat-gpt', {
         .catch((error) => {
           return Promise.reject(error);
         });
+    },
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
     },
   },
 });

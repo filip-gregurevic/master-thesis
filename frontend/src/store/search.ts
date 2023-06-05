@@ -9,6 +9,8 @@ export const useSearchStore = defineStore('search', {
     results: undefined as Results | undefined,
     currentSearchId: -1,
     currentSearchTerm: '',
+    isSidebarOpen: false,
+    isLoading: false,
   }),
   getters: {
     getSearches(state) {
@@ -23,9 +25,16 @@ export const useSearchStore = defineStore('search', {
     getCurrentSearchTerm(state) {
       return state.currentSearchTerm;
     },
+    getIsSidebarOpen(state) {
+      return state.isSidebarOpen;
+    },
+    getIsLoading(state) {
+      return state.isLoading;
+    },
   },
   actions: {
     loadSearches() {
+      this.isLoading = true;
       const authStore = useAuthStore();
 
       return axios
@@ -42,6 +51,9 @@ export const useSearchStore = defineStore('search', {
         })
         .catch((error) => {
           return Promise.reject(error);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
     async search(searchTerm: string) {
@@ -92,6 +104,9 @@ export const useSearchStore = defineStore('search', {
         .catch((error) => {
           return Promise.reject(error);
         });
+    },
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
     },
   },
 });
