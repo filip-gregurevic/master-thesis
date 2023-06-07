@@ -76,4 +76,18 @@ export class ChatGPTController {
 
     return this.chatGPTService.deleteById(id);
   }
+
+  @UseGuards(JWTAuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.User)
+  @Patch('chat-gpt/conversations/:id/name')
+  async updateConversationName(
+    @Param('id') id: number,
+    @Body() data: { name: string },
+  ): Promise<any> {
+    this.logger.log(
+      `Change name ChatGPT conversation with id ${id} to ${data.name}`,
+    );
+
+    return this.chatGPTService.updateNameById(id, data.name);
+  }
 }

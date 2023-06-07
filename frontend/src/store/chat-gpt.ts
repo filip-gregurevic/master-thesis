@@ -7,7 +7,7 @@ export const useChatGPTStore = defineStore('chat-gpt', {
     conversations: [],
     currentConversation: undefined as any | undefined,
     isLoading: false,
-    isSidebarOpen: false,
+    isSidebarOpen: true,
   }),
   getters: {
     getConversations(state) {

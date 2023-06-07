@@ -1,9 +1,9 @@
 <template>
-  <v-navigation-drawer v-model="isSidebarOpen" :temporary="true">
+  <v-navigation-drawer :permanent="isSidebarOpen">
     <template v-slot:prepend>
       <v-btn
         :block="true"
-        class="mb-4"
+        class="mt-4"
         color="primary"
         prepend-icon="mdi-plus"
         @click.stop.prevent="startNewConversation"
@@ -11,65 +11,87 @@
       </v-btn>
     </template>
     <v-list lines="three">
-      <v-list-subheader class="text-h5">My Conversations</v-list-subheader>
+      <v-list-subheader
+        v-if="conversations && conversations.length > 0"
+        class="text-h5"
+        >My Conversations
+      </v-list-subheader>
       <v-list-item
         v-for="conversation in conversations"
         :key="conversation.id"
         :active="
           currentConversation && conversation.id === currentConversation.id
         "
-        :title="
-          conversation.id === editConversationId ? `${conversation.name}` : ''
-        "
         color="secondary"
         @click.prevent="loadConversation(conversation.id)"
       >
-        <v-text-field
-          v-model="newConversationName"
-          placeholder="New Name"
-        ></v-text-field>
-        <template v-if="conversation.id === editConversationId" v-slot:append>
-          <v-btn
-            color="secondary"
-            icon="mdi-square-edit-outline"
-            variant="text"
-            @click.prevent.stop="openEditName(conversation.id)"
-          >
-            <v-tooltip activator="parent" location="bottom"
-              >Change Name
-            </v-tooltip>
-          </v-btn>
-          <v-btn
-            color="error"
-            icon="mdi-close"
-            variant="text"
-            @click.prevent.stop="deleteConversation(conversation.id)"
-          >
-            <v-tooltip activator="parent" location="bottom"
-              >Delete Conversation
-            </v-tooltip>
-          </v-btn>
+        <template v-slot:title>
+          <v-list-item-title v-if="conversation.id !== editConversationId"
+            >{{ conversation.name }}
+          </v-list-item-title>
+          <v-text-field
+            v-else-if="conversation.id === editConversationId"
+            v-model="newConversationName"
+            class="mt-6"
+            placeholder="New Name"
+            variant="outlined"
+            @click.prevent.stop
+            @update.prevent.stop
+          ></v-text-field>
+        </template>
+        <template v-if="conversation.id !== editConversationId" v-slot:append>
+          <v-tooltip location="bottom" text="Change Name">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="secondary"
+                icon="mdi-square-edit-outline"
+                v-bind="props"
+                variant="text"
+                @click.prevent.stop="openEditName(conversation.id)"
+              >
+              </v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip location="bottom" text="Delete Conversation">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="error"
+                icon="mdi-close"
+                v-bind="props"
+                variant="text"
+                @click.prevent.stop="deleteConversation(conversation.id)"
+              >
+              </v-btn>
+            </template>
+          </v-tooltip>
         </template>
         <template
-          v-else-if="conversation.id !== editConversationId"
+          v-else-if="conversation.id === editConversationId"
           v-slot:append
         >
-          <v-btn
-            color="primary"
-            icon="mdi-check"
-            variant="text"
-            @click.prevent.stop="saveName"
-          >
-            <v-tooltip activator="parent" location="bottom">Save</v-tooltip>
-          </v-btn>
-          <v-btn
-            color="error"
-            icon="mdi-close"
-            variant="text"
-            @click.prevent.stop="cancelEditName"
-          >
-            <v-tooltip activator="parent" location="bottom">Cancel</v-tooltip>
-          </v-btn>
+          <v-tooltip location="bottom" text="Save">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                :disabled="!newConversationName"
+                color="primary"
+                icon="mdi-check"
+                v-bind="props"
+                variant="text"
+                @click.prevent.stop="saveName"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip location="bottom" text="Cancel">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="error"
+                icon="mdi-close"
+                v-bind="props"
+                variant="text"
+                @click.prevent.stop="cancelEditName"
+              ></v-btn>
+            </template>
+          </v-tooltip>
         </template>
       </v-list-item>
     </v-list>
@@ -77,42 +99,48 @@
   <v-container class="mt-8">
     <v-row class="max-height">
       <v-col class="px-6">
-        <template v-if="currentConversation">
-          <v-row
-            v-for="message in currentConversation.messages"
-            :key="message.id"
-            align="center"
-            justify="center"
-          >
-            <template v-if="message.type === 'user'">
-              <v-col cols="2"></v-col>
-              <v-col cols="10">
-                <v-card :text="message.content" color="primary" subtitle="You">
-                </v-card>
+        <v-sheet class="pa-8">
+          <template v-if="currentConversation">
+            <v-row
+              v-for="message in currentConversation.messages"
+              :key="message.id"
+              align="center"
+              justify="center"
+            >
+              <template v-if="message.type === 'user'">
+                <v-col cols="2"></v-col>
+                <v-col cols="10">
+                  <v-card
+                    :text="message.content"
+                    color="primary"
+                    subtitle="You"
+                  >
+                  </v-card>
+                </v-col>
+              </template>
+              <template v-else-if="message.type === 'assistant'">
+                <v-col cols="10">
+                  <v-card
+                    :text="message.content"
+                    color="secondary"
+                    subtitle="ChatGPT"
+                  >
+                  </v-card>
+                </v-col>
+                <v-col cols="2"></v-col>
+              </template>
+            </v-row>
+            <div id="tricky"></div>
+            <v-row v-if="isLoading" align="center" justify="center">
+              <v-col cols="auto">
+                <v-progress-circular
+                  color="primary"
+                  indeterminate
+                ></v-progress-circular>
               </v-col>
-            </template>
-            <template v-else-if="message.type === 'assistant'">
-              <v-col cols="10">
-                <v-card
-                  :text="message.content"
-                  color="secondary"
-                  subtitle="ChatGPT"
-                >
-                </v-card>
-              </v-col>
-              <v-col cols="2"></v-col>
-            </template>
-          </v-row>
-          <div id="tricky"></div>
-          <v-row v-if="isLoading" align="center" justify="center">
-            <v-col cols="auto">
-              <v-progress-circular
-                color="primary"
-                indeterminate
-              ></v-progress-circular>
-            </v-col>
-          </v-row>
-        </template>
+            </v-row>
+          </template>
+        </v-sheet>
       </v-col>
     </v-row>
     <v-row>
@@ -127,16 +155,14 @@
                 variant="outlined"
               >
                 <template v-slot:append-inner>
-                  <v-col cols="1">
-                    <v-btn
-                      :block="true"
-                      :disabled="!message || isLoading"
-                      color="primary"
-                      type="submit"
-                    >
-                      Go
-                    </v-btn>
-                  </v-col>
+                  <v-btn
+                    :block="true"
+                    :disabled="!message || isLoading"
+                    color="primary"
+                    type="submit"
+                  >
+                    Go
+                  </v-btn>
                 </template>
               </v-textarea>
             </v-col>
@@ -198,12 +224,12 @@ function cancelEditName() {
 
 function saveName() {
   const chatGPTStore = useChatGPTStore();
-  const alerStore = useAlertStore();
+  const alertStore = useAlertStore();
 
   chatGPTStore
     .changeConversationName(editConversationId.value, newConversationName.value)
     .then(() => {
-      alerStore.initSuccess('Successfully changed name of the conversation');
+      alertStore.initSuccess('Successfully changed name of the conversation');
     })
     .catch((error) => {
       alertStore.initError(error.response.data.message);

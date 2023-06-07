@@ -1,4 +1,5 @@
 import {
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -14,6 +15,9 @@ export class Conversation {
     type: 'bigint',
   })
   id: number;
+
+  @Column()
+  name: string;
 
   @OneToMany(() => Message, (message) => message.conversation)
   messages: Message[];

@@ -1,11 +1,16 @@
 <template>
   <v-app>
     <v-app-bar>
-      <v-btn icon="mdi-menu" variant="text" @click="toggleSidebar">
-        <v-tooltip activator="parent" location="bottom"
-          >Toggle Side Bar
-        </v-tooltip>
-      </v-btn>
+      <v-tooltip location="bottom" text="Toggle Side Bar">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon="mdi-menu"
+            v-bind="props"
+            variant="text"
+            @click="toggleSidebar"
+          ></v-btn>
+        </template>
+      </v-tooltip>
       <v-img
         class="ml-4"
         max-height="32px"

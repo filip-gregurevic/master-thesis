@@ -8,7 +8,7 @@ export const useNLPStore = defineStore('mlp', {
     results: undefined as any | undefined,
     currentSearchId: -1,
     currentSentence: '',
-    isSidebarOpen: false,
+    isSidebarOpen: true,
     isLoading: false,
   }),
   getters: {

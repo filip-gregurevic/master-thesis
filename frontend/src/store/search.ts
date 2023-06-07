@@ -9,7 +9,7 @@ export const useSearchStore = defineStore('search', {
     results: undefined as Results | undefined,
     currentSearchId: -1,
     currentSearchTerm: '',
-    isSidebarOpen: false,
+    isSidebarOpen: true,
     isLoading: false,
   }),
   getters: {

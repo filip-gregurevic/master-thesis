@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="isSidebarOpen" :temporary="true">
+  <v-navigation-drawer :permanent="isSidebarOpen">
     <v-list lines="three">
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
       <template v-for="search in searches" :key="search.id">
@@ -10,16 +10,17 @@
           @click.prevent="loadSearch(search.id)"
         >
           <template v-slot:append>
-            <v-btn
-              color="error"
-              icon="mdi-close"
-              variant="text"
-              @click.prevent.stop="deleteSearch(search.id)"
-            >
-              <v-tooltip activator="parent" location="bottom"
-                >Delete Search
-              </v-tooltip>
-            </v-btn>
+            <v-tooltip location="bottom" text="Delete Search">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="error"
+                  icon="mdi-close"
+                  v-bind="props"
+                  variant="text"
+                  @click.prevent.stop="deleteSearch(search.id)"
+                ></v-btn>
+              </template>
+            </v-tooltip>
           </template>
         </v-list-item>
         <v-divider></v-divider>
@@ -37,15 +38,13 @@
             variant="outlined"
           >
             <template v-slot:append-inner>
-              <v-col cols="1">
-                <v-btn
-                  :block="true"
-                  :disabled="!sentence"
-                  color="primary"
-                  type="submit"
-                  >Go
-                </v-btn>
-              </v-col>
+              <v-btn
+                :block="true"
+                :disabled="!sentence"
+                color="primary"
+                type="submit"
+                >Go
+              </v-btn>
             </template>
           </v-textarea>
         </v-col>

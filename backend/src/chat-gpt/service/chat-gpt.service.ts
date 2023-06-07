@@ -41,6 +41,14 @@ export class ChatGPTService {
     });
   }
 
+  async updateNameById(conversationId: number, name: string) {
+    this.logger.debug(
+      `Change name ChatGPT conversation with id ${conversationId} to ${name}`,
+    );
+
+    return this.conversationRepository.update(conversationId, { name });
+  }
+
   async createConversation(
     userId: number,
     message: string,
@@ -55,17 +63,18 @@ export class ChatGPTService {
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
     const openai = new OpenAIApi(configuration);
-    const response = await openai.createCompletion({
+    const response = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      prompt: message,
+      messages: [{ role: 'user', content: message }],
     });
     this.logger.debug(
-      `Chat GPT answered with: ${response.data.choices[0].text}`,
+      `Chat GPT answered with: ${response.data.choices[0].message.content}`,
     );
 
     this.logger.debug(`Create conversation for user with id: ${userId}`);
     const conversation = await this.conversationRepository.create();
     conversation.user = user;
+    conversation.name = `New Conversation ${conversation.id}`;
     await this.conversationRepository.save(conversation);
 
     this.logger.debug(`Create message for user with content: ${message}`);
@@ -76,11 +85,11 @@ export class ChatGPTService {
     await this.messageRepository.save(userMessage);
 
     this.logger.debug(
-      `Create message for assistant with content: ${response.data.choices[0].text}`,
+      `Create message for assistant with content: ${response.data.choices[0].message.content}`,
     );
     const aiMessage = await this.messageRepository.create();
     aiMessage.conversation = conversation;
-    aiMessage.content = response.data.choices[0].text;
+    aiMessage.content = response.data.choices[0].message.content;
     aiMessage.type = MessageType.Assistant;
     await this.messageRepository.save(aiMessage);
 
