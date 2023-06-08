@@ -28,25 +28,22 @@
     </v-list>
   </v-navigation-drawer>
   <v-container class="mt-8">
-    <v-form @submit.prevent="search">
+    <v-form
+      ref="form"
+      @submit.prevent="search"
+      @keydown.enter.prevent="submitForm"
+    >
       <v-row align-content="center" justify="center">
         <v-col cols="10" lg="8" md="8">
           <v-textarea
             v-model="sentence"
+            append-inner-icon="mdi-send"
             auto-grow
-            placeholder="Write a full sentence"
+            placeholder="Describe your problem in detail and we'll search MITRE ATTACK and DEFEND for you"
+            rows="1"
             variant="outlined"
-          >
-            <template v-slot:append-inner>
-              <v-btn
-                :block="true"
-                :disabled="!sentence"
-                color="primary"
-                type="submit"
-                >Go
-              </v-btn>
-            </template>
-          </v-textarea>
+            @click:append-inner="submitForm"
+          ></v-textarea>
         </v-col>
       </v-row>
     </v-form>
@@ -117,6 +114,11 @@ const sentence = ref('');
 function markdownToHtml(markdown: string) {
   // TODO: resolve console warnings
   return marked(markdown);
+}
+
+function submitForm() {
+  const form = document.querySelector('form');
+  form!.dispatchEvent(new Event('submit', { cancelable: true }));
 }
 
 function search() {

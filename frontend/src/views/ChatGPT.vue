@@ -10,7 +10,7 @@
         >New Conversation
       </v-btn>
     </template>
-    <v-list lines="three">
+    <v-list>
       <v-list-subheader
         v-if="conversations && conversations.length > 0"
         class="text-h5"
@@ -99,72 +99,64 @@
   <v-container class="mt-8">
     <v-row class="max-height">
       <v-col class="px-6">
-        <v-sheet class="pa-8">
-          <template v-if="currentConversation">
-            <v-row
-              v-for="message in currentConversation.messages"
-              :key="message.id"
-              align="center"
-              justify="center"
-            >
-              <template v-if="message.type === 'user'">
-                <v-col cols="2"></v-col>
-                <v-col cols="10">
-                  <v-card
-                    :text="message.content"
-                    color="primary"
-                    subtitle="You"
-                  >
-                  </v-card>
-                </v-col>
-              </template>
-              <template v-else-if="message.type === 'assistant'">
-                <v-col cols="10">
-                  <v-card
-                    :text="message.content"
-                    color="secondary"
-                    subtitle="ChatGPT"
-                  >
-                  </v-card>
-                </v-col>
-                <v-col cols="2"></v-col>
-              </template>
-            </v-row>
-            <div id="tricky"></div>
-            <v-row v-if="isLoading" align="center" justify="center">
-              <v-col cols="auto">
-                <v-progress-circular
-                  color="primary"
-                  indeterminate
-                ></v-progress-circular>
+        <v-sheet v-if="currentConversation" class="pa-8">
+          <v-row
+            v-for="message in currentConversation.messages"
+            :key="message.id"
+            align="center"
+            justify="center"
+          >
+            <template v-if="message.type === 'user'">
+              <v-col cols="2"></v-col>
+              <v-col cols="10">
+                <v-card :text="message.content" color="primary" subtitle="You">
+                </v-card>
               </v-col>
-            </v-row>
-          </template>
+            </template>
+            <template v-else-if="message.type === 'assistant'">
+              <v-col cols="10">
+                <v-card color="secondary" subtitle="ChatGPT">
+                  <div
+                    class="v-card-text mx-4"
+                    v-html="markdownToHtml(message.content)"
+                  ></div>
+                </v-card>
+              </v-col>
+              <v-col cols="2"></v-col>
+            </template>
+          </v-row>
+          <div id="tricky"></div>
+          <v-row v-if="isLoading" align="center" justify="center">
+            <v-col cols="auto">
+              <v-progress-circular
+                class="mt-4"
+                color="primary"
+                indeterminate
+              ></v-progress-circular>
+            </v-col>
+          </v-row>
         </v-sheet>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <v-form @submit.prevent="sendMessage">
+        <v-form
+          ref="form"
+          @submit.prevent="sendMessage"
+          @keydown.enter.prevent="submitForm"
+        >
           <v-row align-content="center" justify="center">
             <v-col cols="10" lg="8" md="8">
               <v-textarea
                 v-model="message"
+                :disabled="isLoading"
+                append-inner-icon="mdi-send"
                 auto-grow
                 placeholder="Write a full sentence"
+                rows="1"
                 variant="outlined"
-              >
-                <template v-slot:append-inner>
-                  <v-btn
-                    :block="true"
-                    :disabled="!message || isLoading"
-                    color="primary"
-                    type="submit"
-                  >
-                    Go
-                  </v-btn>
-                </template>
-              </v-textarea>
+                @click:append-inner="submitForm"
+              ></v-textarea>
             </v-col>
           </v-row>
         </v-form>
@@ -177,6 +169,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useChatGPTStore } from '@/store/chat-gpt';
 import { useAlertStore } from '@/store/alert';
+import { marked } from 'marked';
 
 // load search history when component is loaded
 onMounted(() => {
@@ -212,6 +205,16 @@ const isSidebarOpen = computed(() => {
 const message = ref('');
 const editConversationId = ref(-1);
 const newConversationName = ref('');
+
+function markdownToHtml(markdown: string) {
+  // TODO: resolve console warnings
+  return marked(markdown);
+}
+
+function submitForm() {
+  const form = document.querySelector('form');
+  form!.dispatchEvent(new Event('submit', { cancelable: true }));
+}
 
 function openEditName(conversationId: number) {
   editConversationId.value = conversationId;
@@ -254,6 +257,7 @@ function sendMessage() {
   chatGPTStore
     .sendMessage(message.value)
     .then(() => {
+      message.value = '';
       const lastMessageElement = document.getElementById('tricky');
 
       lastMessageElement!.scrollIntoView();
@@ -276,6 +280,7 @@ function loadConversation(conversationId: number) {
         lastMessageElement!.scrollIntoView();
       } catch (e) {
         console.log(e);
+        throw e;
       }
     })
     .catch((error) => {

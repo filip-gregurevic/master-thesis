@@ -59,7 +59,7 @@
 import DefaultView from './View.vue';
 import { useAuthStore } from '@/store/auth';
 import { useTheme } from 'vuetify';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useAlertStore } from '@/store/alert';
 import { useSearchStore } from '@/store/search';
 import { useNLPStore } from '@/store/nlp';
@@ -75,10 +75,28 @@ const theme = computed(() => {
   return useTheme();
 });
 
+onMounted(() => {
+  const storedTheme = localStorage.getItem('darkTheme');
+  if (storedTheme) {
+    if (storedTheme === 'dark') {
+      theme.value.global.name.value = 'dark';
+    } else {
+      theme.value.global.name.value = 'light';
+    }
+  } else if (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  ) {
+    theme.value.global.name.value = 'dark';
+    localStorage.setItem('darkTheme', 'dark');
+  }
+});
+
 function toggleTheme() {
   theme.value.global.name.value = theme.value.global.current.value.dark
     ? 'light'
     : 'dark';
+  localStorage.setItem('darkTheme', theme.value.global.name.value);
 }
 
 function toggleSidebar() {

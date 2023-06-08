@@ -42,24 +42,20 @@
         ><h1 class="text-h3">Search MITRE ATT4CK & D3FEND</h1></v-col
       >
     </v-row>
-    <v-form @submit.prevent="search">
+    <v-form
+      ref="form"
+      @submit.prevent="search"
+      @keydown.enter.prevent="submitForm"
+    >
       <v-row align-content="center" justify="center">
         <v-col cols="10" lg="8" md="8">
           <v-text-field
             v-model="searchTerm"
+            append-inner-icon="mdi-send"
             placeholder="Search..."
             variant="outlined"
-          >
-            <template v-slot:append-inner>
-              <v-btn
-                :block="true"
-                :disabled="!searchTerm"
-                color="primary"
-                type="submit"
-                >Go
-              </v-btn>
-            </template>
-          </v-text-field>
+            @click:append-inner="submitForm"
+          ></v-text-field>
         </v-col>
       </v-row>
     </v-form>
@@ -500,6 +496,11 @@ function highLight(text: string) {
   const regexp = new RegExp(activeSearchTerm.value, 'ig');
   const highlights = text.replace(regexp, '<mark>$&</mark>');
   return `${highlights}`;
+}
+
+function submitForm() {
+  const form = document.querySelector('form');
+  form!.dispatchEvent(new Event('submit', { cancelable: true }));
 }
 
 function search() {

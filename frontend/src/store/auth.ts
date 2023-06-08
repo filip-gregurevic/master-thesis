@@ -7,7 +7,11 @@ export const useAuthStore = defineStore('auth', {
     user: JSON.parse(localStorage.getItem('user')!),
     access_token: localStorage.getItem('token') as string | null,
   }),
-
+  getters: {
+    getUser(state) {
+      return state.user;
+    },
+  },
   actions: {
     async register(email: string, password: string) {
       return axios

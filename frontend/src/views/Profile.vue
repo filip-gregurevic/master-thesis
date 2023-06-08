@@ -29,6 +29,14 @@
             @blur="v$.role.$touch"
             @update:modelValue="v$.role.$touch"
           ></v-select>
+          <v-banner
+            v-if="state.role !== authUser.role"
+            border
+            color="info"
+            icon="mdi-information-outline"
+            rounded
+            text="You have to logout and back in so that the this change takes effect!"
+          ></v-banner>
         </v-col>
       </v-row>
       <v-row align-content="center" justify="center">
@@ -88,6 +96,7 @@ import { useProfileStore } from '@/store/profile';
 import { email, minLength, required, sameAs } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import { useAlertStore } from '@/store/alert';
+import { useAuthStore } from '@/store/auth';
 
 const initialState = {
   email: '',
@@ -110,6 +119,12 @@ const rules = {
 };
 
 const v$ = useVuelidate(rules, state);
+
+const authUser = computed(() => {
+  const authStore = useAuthStore();
+
+  return authStore.getUser;
+});
 
 const showPassword = ref(false);
 const showPasswordRepeated = ref(false);
@@ -157,8 +172,6 @@ function deleteProfile() {
 function updateProfile() {
   const profileStore = useProfileStore();
   const alertStore = useAlertStore();
-
-  console.log(state);
 
   return profileStore
     .updateProfile({
