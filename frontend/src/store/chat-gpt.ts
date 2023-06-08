@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export const useChatGPTStore = defineStore('chat-gpt', {
   state: () => ({
-    conversations: [],
+    conversations: [] as any[],
     currentConversation: undefined as any | undefined,
     isLoading: false,
     isSidebarOpen: true,
