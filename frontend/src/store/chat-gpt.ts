@@ -39,7 +39,9 @@ export const useChatGPTStore = defineStore('chat-gpt', {
             '/chat-gpt',
         )
         .then((res) => {
-          this.conversations = res.data;
+          this.conversations = res.data.sort((a: any, b: any) =>
+            a.id.localeCompare(b.id),
+          );
 
           return Promise.resolve(res.data);
         })
@@ -137,7 +139,7 @@ export const useChatGPTStore = defineStore('chat-gpt', {
         .patch(
           import.meta.env.VITE_BACKEND_URL +
             '/chat-gpt/conversations/' +
-            this.currentConversation.id +
+            conversationId +
             '/name',
           { name },
         )

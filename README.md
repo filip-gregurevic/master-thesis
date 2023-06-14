@@ -14,8 +14,8 @@ Backend Nestjs + ElasticSearch + Kibana
 ## Prerequisites
 
 * [Node](https://nodejs.org/en) version 18.10
-* npm 8.19.2
-* docker
+* [yarn](https://yarnpkg.com/) version 1.22.19
+* [docker](https://www.docker.com/)
 
 Other useful tools and recommendations for developing this project:
 
@@ -32,10 +32,11 @@ Other useful tools and recommendations for developing this project:
 ## Setup & Installation
 
 Before starting you have to clone the repository.
+For access to GitHub ask the currenty maintainer.
 
 ### Database
 
-None, but also optional to run completly locally instead of docker
+None, but also optional to run completely locally instead of docker
 dump in /database folder for quick start with mitre attack & defend and admin account
 
 And csv for import:
@@ -73,6 +74,9 @@ Note: this step is only needed for local development
 
 ### Elasticsearch
 
+You can find selected HTTP-requests to your local Elasticsearch instance in the postman collection in the `/postman`
+folder.
+
 1. Start trial: Necessary for using AI
 2. Import the pretrained model
 3. Import the data into an index
@@ -87,9 +91,9 @@ clone eland repo: https://github.com/elastic/eland
 start container & run command:
 
 ```shell
-docker run -it --rm --network=master-thesis_default elastic/eland \
+docker run -it --rm --network=elastic elastic/eland \
     eland_import_hub_model \
-    --url http://elasticsearch:9200 \
+    --url http://34.78.27.127:9200 \
     --hub-model-id sentence-transformers/all-distilroberta-v1 \
     --task-type text_embedding \
     --start
@@ -110,6 +114,7 @@ setup:
 
 * https://blog.devgenius.io/elasticsearch-and-kibana-installation-using-docker-compose-886c4823495e
 * https://www.elastic.co/guide/en/kibana/current/docker.html
+* https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 
 note elasticsearch on docker is not started with any security, not suited for production setup
 
@@ -156,7 +161,7 @@ The frontend should now be available at `localhost:3000` within a few moments.
 Currently hosted on Google Cloud
 Serverless Google Cloud Run for frontend and backend
 Elasticsearch with following config: TODO
-Database Hosted Postegres
+Database Hosted Postgres
 
 Only setup needed Google cloud project setup
 database setup
@@ -164,11 +169,20 @@ and adding env vars after services are running
 
 Deployment automated using GitHub Workflows
 Config
-crete service worker and add secrets and variables to github secrets
+crete service worker and add secrets and variables to GitHub secrets
 
 Docker images in gcr
 
-Any other hosting can be used, e.g. AWS ECS, since app is dockerized or also deployed on single server with docker
+Any other hosting can be used, e.g. AWS ECS, since all applications in this project are dockerized or also deployed on
+single server (or virtual machine) using docker
 compose
 NOTE: see security elasticsearch
 
+docker run --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e xpack.security.enabled=false -e
+discovery.type=single-node -v elasticsearch-data:/usr/share/elasticsearch/data --ulimit nofile=65536:65536 --ulimit
+memlock=-1:-1 docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+
+docker pull docker.elastic.co/kibana/kibana:8.7.1
+
+docker run --name kibana --net elastic -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://elasticsearch:9200 -v kibana-data:
+/usr/share/kibana/data docker.elastic.co/kibana/kibana:8.7.1

@@ -37,6 +37,8 @@
             variant="outlined"
             @click.prevent.stop
             @update.prevent.stop
+            @keydown.space.stop
+            @keyup.space.stop
           ></v-text-field>
         </template>
         <template v-if="conversation.id !== editConversationId" v-slot:append>
