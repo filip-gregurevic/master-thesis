@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer :permanent="isSidebarOpen">
+  <v-navigation-drawer v-model="isSidebarOpen" :permanent="true">
     <template v-slot:prepend>
       <v-btn
         :block="true"

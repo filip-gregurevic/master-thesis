@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer :permanent="isSidebarOpen">
+  <v-navigation-drawer v-model="isSidebarOpen" :permanent="true">
     <v-list lines="three">
       <v-list-subheader class="text-h5">My Searches</v-list-subheader>
       <template v-for="search in searches" :key="search.id">
