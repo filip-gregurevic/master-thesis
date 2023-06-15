@@ -20,7 +20,7 @@ services:
       - "3333:3333"
   database:
     image: postgres:13
-    container_name: master-thesis-database
+    container_name: master-thesis-data
     restart: always
     ports:
       - "5432:5432"
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: "password"
       POSTGRES_DB: "master-thesis"
     volumes:
-      - database:/var/lib/postgresql/data
+      - data:/var/lib/postgresql/data
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
     container_name: elasticsearch

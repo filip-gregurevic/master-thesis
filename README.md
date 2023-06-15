@@ -1,17 +1,29 @@
-# Filip Gregurević's Master Thesis
+# Prototype - Exploring Potentials to Automate and Support Cyber Security Work
 
 This is the repository for the Master Thesis "Exploring Potentials to Automate and Support Cyber Security Work" by Filip
-Gregurević
+Gregurević at the Krcmar Lab of the School of Computation, Information and Technology - Informatics of The Technical
+University of Munich.
+
+Currently, you can find a live version of this project on [search.brooca.io](https://search.brooca.io).
+
 filipgregurevic@gmail.com
 filip.gregurevic@tum.de
 
 ## Technology Stack
 
-Database Postgres
-Frontend Vue3 + vuetify
-Backend Nestjs + ElasticSearch + Kibana
+The technology stack for this prototype consists of Vue3 for the frontend utilizing Vuetify as the component library.
+
+The backend is built using NestJS.
+
+The selected database engine is Postgres.
+
+In addition, Elasticsearch and Kibana are leveraged for advanced searching mechanism.
+
+All components of this project are dockerized for more comfortable development and hosting.
 
 ## Prerequisites
+
+This prototype was built using the following environment:
 
 * [Node](https://nodejs.org/en) version 18.10
 * [yarn](https://yarnpkg.com/) version 1.22.19
@@ -32,45 +44,68 @@ Other useful tools and recommendations for developing this project:
 ## Setup & Installation
 
 Before starting you have to clone the repository.
-For access to GitHub ask the currenty maintainer.
+
+For access to GitHub ask the current maintainer.
 
 ### Database
 
-None, but also optional to run completely locally instead of docker
-dump in /database folder for quick start with mitre attack & defend and admin account
+There is no setup necessary for the database as it can be started using docker.
+You can also install and run the database completely locally. For this refer to the official documentation.
 
-And csv for import:
+For a faster and easier setup, you can also import the database dump located in the `/data` folder.
+It includes an admin account (email: `admin@admin.com`, password `admin123`) and the MITRE ATT&CK and D3FEND data.
+Link to how to import database dump with tableplus
+
+In case you only need the MITRE ATT&CK and D3FEND data you can find it in separate CSV files within the `/data` folder.
 how to import with table plus
 
 ### Backend
+
+In order to run the NestJS backend, you have to follow a few simple steps first.
+
+First, navigate to the `backend` folder using your preferred terminal.
 
 ```shell
 cd backend
 ```
 
+Next, copy the contents of the `.env.local` file to a `.env` file. The `.env.local` file already contains some
+environment variables suitable for local development.
+
 ```shell
 cp .env.local .env
 ```
 
-Generate JWT Secret
+Generate a JWT Secret.
 
 Add your OpenAI API Key
 Guide how to obtain API Key: https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/
 Note this service costs
 
+Lastly, install the dependencies.
+
 ```shell
 yarn
 ```
 
-Note: This step is only needed for local development
+**Note**: The last step is only needed for local development.
 
 ### Frontend
+
+You don't have to perform any steps in order to run the Vue frontend. The following steps are only necessary if you want
+to develop locally.
+
+First, navigate to the `frontend` folder using your preferred terminal.
 
 ```shell
 cd frontend
 ```
 
-Note: this step is only needed for local development
+Lastly, install the dependencies.
+
+```shell
+yarn
+```
 
 ### Elasticsearch
 
@@ -109,6 +144,8 @@ Links:
 * https://www.elastic.co/guide/en/elasticsearch/reference/8.7/inference-processor.html#inference-processor-classification-opt
 * https://discuss.elastic.co/t/authorization-exception-when-trying-to-import-model-to-elasticsearch-cluster/309840
 * https://discuss.elastic.co/t/dec-21st-2022-en-how-to-import-an-ml-model-with-eland-if-youre-not-a-python-developer/318465
+* https://www.elastic.co/de/blog/how-to-deploy-nlp-sentiment-analysis-example
+* https://www.elastic.co/blog/text-similarity-search-with-vectors-in-elasticsearch
 
 setup:
 
