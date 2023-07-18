@@ -126,9 +126,10 @@ clone eland repo: https://github.com/elastic/eland
 start container & run command:
 
 ```shell
-docker run -it --rm --network=elastic elastic/eland \
+docker run -it --rm elastic/eland \
     eland_import_hub_model \
-    --url http://34.78.27.127:9200 \
+    --cloud-id eb6a146a2fe548d0a969a6c3c57b9c00:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvOjQ0MyQxYjA3YzRhMmUyNjY0ZWMwOTIxMmU2MDg1ODZkNDEzZSRkODA3NTA0ZWM1OTg0YTY0YjVlMmU4NmY2ODFiMDhmMw== \ 
+    -u f.gregurevic@driverhero.de -p filipIstCool123 \ 
     --hub-model-id sentence-transformers/all-distilroberta-v1 \
     --task-type text_embedding \
     --start
@@ -153,7 +154,7 @@ setup:
 * https://www.elastic.co/guide/en/kibana/current/docker.html
 * https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 
-note elasticsearch on docker is not started with any security, not suited for production setup
+NOTE: elasticsearch on docker is started without any security, it is not suited for production setup
 
 ## Running the Project
 

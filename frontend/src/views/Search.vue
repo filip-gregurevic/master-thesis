@@ -39,7 +39,7 @@
         ></v-img>
       </v-col>
       <v-col cols="auto"
-        ><h1 class="text-h3">Search MITRE ATT4CK & D3FEND</h1></v-col
+        ><h1 class="text-h3">Search MITRE ATT&CK & D3FEND</h1></v-col
       >
     </v-row>
     <v-form

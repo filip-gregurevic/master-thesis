@@ -28,6 +28,20 @@
     </v-list>
   </v-navigation-drawer>
   <v-container class="mt-8">
+    <v-row align-content="center" class="mb-4" justify="center">
+      <v-col cols="auto">
+        <v-img
+          height="50px"
+          src="@/assets/logo-cropped.svg"
+          width="50px"
+        ></v-img>
+      </v-col>
+      <v-col cols="auto"
+        ><h1 class="text-h3">
+          Search MITRE ATT&CK using NLP and Vector Search
+        </h1></v-col
+      >
+    </v-row>
     <v-form
       ref="form"
       @submit.prevent="search"

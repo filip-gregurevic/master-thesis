@@ -46,6 +46,10 @@ export class NLPService {
               num_candidates: 100,
             },
           },
+          headers: {
+            Authorization:
+              'ApiKey UHV4TmFva0JLQXdUc2VNV2dNVDk6QU1xNHdaTGRRMFc2Rm5QSWJMdE1jQQ==',
+          },
         },
       ),
     );
@@ -80,6 +84,10 @@ export class NLPService {
               num_candidates: 100,
             },
           },
+          headers: {
+            Authorization:
+              'ApiKey UHV4TmFva0JLQXdUc2VNV2dNVDk6QU1xNHdaTGRRMFc2Rm5QSWJMdE1jQQ==',
+          },
         },
       ),
     );
@@ -98,6 +106,12 @@ export class NLPService {
         {
           docs: {
             text_field: sentence,
+          },
+        },
+        {
+          headers: {
+            Authorization:
+              'ApiKey UHV4TmFva0JLQXdUc2VNV2dNVDk6QU1xNHdaTGRRMFc2Rm5QSWJMdE1jQQ==',
           },
         },
       ),
