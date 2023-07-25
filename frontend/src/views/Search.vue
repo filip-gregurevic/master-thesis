@@ -31,16 +31,31 @@
   </v-navigation-drawer>
   <v-container class="mt-8">
     <v-row align-content="center" class="mb-4" justify="center">
-      <v-col cols="auto">
-        <v-img
-          height="50px"
-          src="@/assets/logo-cropped.svg"
-          width="50px"
-        ></v-img>
+      <v-col class="ma-6" cols="8">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <v-row align-content="center" justify="start">
+                <v-col cols="auto">
+                  <v-img
+                    height="50px"
+                    src="@/assets/logo-cropped.svg"
+                    width="50px"
+                  ></v-img>
+                </v-col>
+                <v-col cols="auto">
+                  <h1 class="text-h3">Search MITRE ATT&CK & D3FEND</h1></v-col
+                >
+              </v-row>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text
+              >This Search uses a "regular" full-text search. This means it will
+              check the titles and definitions of the components included in
+              MITRE ATT&CK & D3FEND for the search term you enter.
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
-      <v-col cols="auto"
-        ><h1 class="text-h3">Search MITRE ATT&CK & D3FEND</h1></v-col
-      >
     </v-row>
     <v-form
       ref="form"

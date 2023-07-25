@@ -29,18 +29,35 @@
   </v-navigation-drawer>
   <v-container class="mt-8">
     <v-row align-content="center" class="mb-4" justify="center">
-      <v-col cols="auto">
-        <v-img
-          height="50px"
-          src="@/assets/logo-cropped.svg"
-          width="50px"
-        ></v-img>
+      <v-col class="ma-6" cols="8">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <v-row align-content="center" justify="start">
+                <v-col cols="auto">
+                  <v-img
+                    height="50px"
+                    src="@/assets/logo-cropped.svg"
+                    width="50px"
+                  ></v-img>
+                </v-col>
+                <v-col cols="auto">
+                  <h1 class="text-h3">Search MITRE ATT&CK using NLP</h1></v-col
+                >
+              </v-row>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text
+              >This search uses NLP and Vector Search to query the components of
+              MITRE ATT&CK. You can write full sentences to describe your
+              situation or what you are looking for. The system will compute the
+              similarity of your query and the component and return the 10 most
+              similar results. The similarity is computed by using the
+              distilroberta-v1 model which infers a vector onto your query and
+              the components and then uses KNN to compute similarity.
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
-      <v-col cols="auto"
-        ><h1 class="text-h3">
-          Search MITRE ATT&CK using NLP and Vector Search
-        </h1></v-col
-      >
     </v-row>
     <v-form
       ref="form"

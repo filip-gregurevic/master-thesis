@@ -100,18 +100,34 @@
   </v-navigation-drawer>
   <v-container class="mt-8">
     <v-row align-content="center" class="mb-4" justify="center">
-      <v-col cols="auto">
-        <v-img
-          height="50px"
-          src="@/assets/logo-cropped.svg"
-          width="50px"
-        ></v-img>
+      <v-col class="ma-6" cols="8">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              <v-row align-content="center" justify="start">
+                <v-col cols="auto">
+                  <v-img
+                    height="50px"
+                    src="@/assets/logo-cropped.svg"
+                    width="50px"
+                  ></v-img>
+                </v-col>
+                <v-col cols="auto"
+                  ><h1 class="text-h3">
+                    Ask ChatGPT anything about Cyber Security
+                  </h1></v-col
+                >
+              </v-row>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text
+              >Describe your problem, situation or request and have a
+              conversation with ChatGPT. You can refine your request during the
+              conversation, ask follow-up questions or just talk about
+              interesting Cyber Security facts.
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
-      <v-col cols="auto"
-        ><h1 class="text-h3">
-          Search MITRE ATT&CK using NLP and Vector Search
-        </h1></v-col
-      >
     </v-row>
     <v-row class="max-height">
       <v-col class="px-6">

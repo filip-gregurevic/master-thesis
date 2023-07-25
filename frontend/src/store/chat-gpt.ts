@@ -53,6 +53,7 @@ export const useChatGPTStore = defineStore('chat-gpt', {
         });
     },
     async loadConversationById(conversationId: number) {
+      this.isLoading = true;
       return axios
         .get(
           import.meta.env.VITE_BACKEND_URL +
@@ -66,6 +67,9 @@ export const useChatGPTStore = defineStore('chat-gpt', {
         })
         .catch((error) => {
           return Promise.reject(error);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
     async sendMessage(message: string) {
