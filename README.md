@@ -1,13 +1,37 @@
-# Prototype - Exploring Potentials to Automate and Support Cyber Security Work
+# Prototype - Enhancing Cyber Threat Intelligence
 
-This is the repository for the Master Thesis "Exploring Potentials to Automate and Support Cyber Security Work" by Filip
+This is the repository for the Master Thesis "Enhancing Cyber Threat Intelligence" by Filip
 Gregurević at the Krcmar Lab of the School of Computation, Information and Technology - Informatics of The Technical
 University of Munich.
 
-Currently, you can find a live version of this project on [search.brooca.io](https://search.brooca.io).
+At one point in time, you were able to find a live version of this project
+on [search.brooca.io](https://search.brooca.io).
 
-filipgregurevic@gmail.com
-filip.gregurevic@tum.de
+You can find the GitHub repository here: https://github.com/filip-gregurevic/master-thesis
+
+In case you have any questions, feel free to reach out via e-mail to filipgregurevic@gmail.com or
+filip.gregurevic@tum.de.
+
+## Quick Start
+
+This describes the method to start the system as quickly as possible without hot-reloading.
+
+1. Start the system using docker compose. This will start all services necessary to run the prototype. Navigate to the
+   root folder and run the following command:
+
+   ```docker compose up```
+
+2. Import the database dump as described in the Database section of the Setup
+3. Import the ElasticSearch data as described in the ElasticSearch section of the Setup
+4. Start the ElasticSearch trial as described in the ElasticSearch section of the Setup (Hint: use the provided postman
+   collection)
+
+After these steps, you should be able to find the prototype running on `localhost:3000` and you can log in using the
+email `admin@admin.com` and password `Admin123`
+
+NOTE: For the sake of evaluating this prototype, the OpenAI API key is shared. In case of any wrongdoing or misuse, it
+will be invalidated.
+To add your own API key follow the steps described in the ChatGPT section.
 
 ## Technology Stack
 
@@ -53,11 +77,13 @@ There is no setup necessary for the database as it can be started using docker.
 You can also install and run the database completely locally. For this refer to the official documentation.
 
 For a faster and easier setup, you can also import the database dump located in the `/data` folder.
-It includes an admin account (email: `admin@admin.com`, password `admin123`) and the MITRE ATT&CK and D3FEND data.
-Link to how to import database dump with tableplus
+It includes an admin account (email: `admin@admin.com`, password `Admin123`) and the MITRE ATT&CK and D3FEND data.
+Here two ways are described how to restore a database from a
+dump: https://tableplus.com/blog/2018/08/postgresql-how-to-backup-and-restore-database.html
 
 In case you only need the MITRE ATT&CK and D3FEND data you can find it in separate CSV files within the `/data` folder.
-how to import with table plus
+The following provides guides on how to back up and restore Postgres databases using TablePlus or the Command
+Line: https://tableplus.com/blog/2018/08/postgresql-how-to-backup-and-restore-database.html.
 
 ### Backend
 
@@ -107,35 +133,37 @@ Lastly, install the dependencies.
 yarn
 ```
 
-### Elasticsearch
+### ElasticSearch
+
+Before being able to use the started ElasticSearch instance, you have to at least complete the following two steps:
+
+1. Start the ElasticSearch trial in order to use the ML functionalities, such as the KNN search algorithm.
+
+   The easiest way to do this, is importing the Postman collection and executing the "Start Trial" request.
+
+2. Import the index containing the MITRE data with already included embeddings. You can find it in the `/elasticsearch`
+   folder called `/mitre-embedded-index.json`
+
+   You can either import the index using the data upload feature of kibana or with a post request:
+
+    ```
+    curl -XPOST "http://localhost:9200/mitre-embedded/_bulk" -H "Content-Type: application/json" --data-binary "@mitre-embedded-index.json"
+    ```
 
 You can find selected HTTP-requests to your local Elasticsearch instance in the postman collection in the `/postman`
 folder.
 
+In case you want to set up the ElasticSearch instance from scratch by yourself, you have to complete the following
+steps:
+
 1. Start trial: Necessary for using AI
-2. Import the pretrained model
+2. Import the pretrained model using eland
 3. Import the data into an index
 4. Setup ingress pipeline
 5. Process data
-6. Re-index
+6. Re-index using the ingress pipeline
 
-useful tool to convert excel to ndjson: https://konbert.com/convert/excel/to/ndjson
-
-eland image for import:
-clone eland repo: https://github.com/elastic/eland
-start container & run command:
-
-```shell
-docker run -it --rm elastic/eland \
-    eland_import_hub_model \
-    --cloud-id eb6a146a2fe548d0a969a6c3c57b9c00:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvOjQ0MyQxYjA3YzRhMmUyNjY0ZWMwOTIxMmU2MDg1ODZkNDEzZSRkODA3NTA0ZWM1OTg0YTY0YjVlMmU4NmY2ODFiMDhmMw== \ 
-    -u f.gregurevic@driverhero.de -p filipIstCool123 \ 
-    --hub-model-id sentence-transformers/all-distilroberta-v1 \
-    --task-type text_embedding \
-    --start
-```
-
-Links:
+You can find guides on how to perform these steps here:
 
 * https://www.elastic.co/de/blog/how-to-deploy-nlp-text-embeddings-and-vector-search
 * https://www.elastic.co/de/blog/text-similarity-search-with-vectors-in-elasticsearch
@@ -148,13 +176,38 @@ Links:
 * https://www.elastic.co/de/blog/how-to-deploy-nlp-sentiment-analysis-example
 * https://www.elastic.co/blog/text-similarity-search-with-vectors-in-elasticsearch
 
-setup:
+#### Bonus Info:
+
+Useful tool to convert excel to ndjson: https://konbert.com/convert/excel/to/ndjson
+
+eland image for import:
+clone eland repo: https://github.com/elastic/eland
+start container & run command:
+
+```shell
+docker run -it --rm elastic/eland \
+    eland_import_hub_model \
+    --url http://elasticsearch:9200 \ 
+    --hub-model-id sentence-transformers/all-distilroberta-v1 \
+    --task-type text_embedding \
+    --start
+```
+
+Useful links:
 
 * https://blog.devgenius.io/elasticsearch-and-kibana-installation-using-docker-compose-886c4823495e
 * https://www.elastic.co/guide/en/kibana/current/docker.html
 * https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
 
 NOTE: elasticsearch on docker is started without any security, it is not suited for production setup
+
+### ChatGPT
+
+In order for the integration to ChatGPT to work, you only have to include your OpenAI API key in the `.env`
+or `.env.local` file.
+
+In case you don't have an OpenAI API Key already, here is a guide which explains how you can obtain
+it: https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/
 
 ## Running the Project
 
@@ -163,9 +216,11 @@ You can either start up the whole project at once using docker
 Note: This doesn't support hot-reloading for the frontend and backend,
 but you can also start some services individually and run the rest using docker compose.
 
+```shell
 docker compose up
+```
 
-or you can use the docker desktop application or the docker management in your IDE.
+or you can use the docker desktop application or the docker management in your IDE (if you use IntelliJ or WebStorm).
 
 ### Running Services Individually
 
@@ -196,31 +251,19 @@ The frontend should now be available at `localhost:3000` within a few moments.
 
 ## Deployment & Hosting
 
-Currently hosted on Google Cloud
-Serverless Google Cloud Run for frontend and backend
-Elasticsearch with following config: TODO
-Database Hosted Postgres
+This repository also contains the pipelines for CI/CD for Google Cloud
+It was hosted using:
 
-Only setup needed Google cloud project setup
-database setup
-and adding env vars after services are running
+* Serverless Google Cloud Run for frontend and backend
+* Google Compute Engine for Elasticsearch and Kibana
+* Google GCR for hosting the docker images
+* Google Cloud SQL database for Postgres
 
-Deployment automated using GitHub Workflows
-Config
-crete service worker and add secrets and variables to GitHub secrets
+The GitHub actions are also provided in this repository to automatically build and deploy the prototype. You can find a
+guide on hot to do this
+here: https://medium.com/google-cloud/how-to-deploy-your-cloud-run-service-using-github-actions-e5b6a6f597a3
 
-Docker images in gcr
-
-Any other hosting can be used, e.g. AWS ECS, since all applications in this project are dockerized or also deployed on
-single server (or virtual machine) using docker
+Any other hosting can be used, e.g. AWS ECS, since all applications in this project are dockerized. The system can also
+be deployed on
+single server (or virtual machine) using docker compose for example.
 compose
-NOTE: see security elasticsearch
-
-docker run --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e xpack.security.enabled=false -e
-discovery.type=single-node -v elasticsearch-data:/usr/share/elasticsearch/data --ulimit nofile=65536:65536 --ulimit
-memlock=-1:-1 docker.elastic.co/elasticsearch/elasticsearch:8.8.0
-
-docker pull docker.elastic.co/kibana/kibana:8.7.1
-
-docker run --name kibana --net elastic -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://elasticsearch:9200 -v kibana-data:
-/usr/share/kibana/data docker.elastic.co/kibana/kibana:8.7.1
